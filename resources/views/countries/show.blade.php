@@ -1,64 +1,69 @@
 @extends('layouts.master')
 
 @section('content')
+<div class="container py-4">
+    <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+        
+        <div class="card-header bg-primary text-white py-3 d-flex align-items-center justify-content-between">
+            <h4 class="mb-0 fw-bold">Detail Negara</h4>
+            <span class="badge bg-light text-primary fw-semibold fs-6">Profil Wilayah</span>
+        </div>
+        
+        <div class="card-body p-4">
+            <div class="row align-items-center mb-4">
+                <div class="col-md-3 text-center text-md-start mb-3 mb-md-0">
+                    <div class="display-1 text-dark p-3 bg-light rounded-3 d-inline-block shadow-sm" style="line-height: 1;">
+                        {{ $country->flag }}
+                    </div>
+                </div>
+                <div class="col-md-9 text-center text-md-start">
+                    <h1 class="fw-bold mb-1">{{ $country->name }}</h1>
+                    <p class="text-muted mb-0 fs-5">
+                        <i class="bi bi-geo-alt-fill text-danger me-1"></i> {{ $country->region }} &bull; {{ $country->subregion }}
+                    </p>
+                </div>
+            </div>
 
-<div class="card">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle border-top">
+                    <tbody>
+                        <tr>
+                            <th class="text-muted fw-semibold py-3" style="width: 25%;">Nama Negara</th>
+                            <td class="fw-bold py-3 text-dark">{{ $country->name }}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted fw-semibold py-3">Ibu Kota</th>
+                            <td class="py-3">{{ $country->capital }}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted fw-semibold py-3">Wilayah (Region)</th>
+                            <td class="py-3">{{ $country->region }}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted fw-semibold py-3">Sub-Wilayah</th>
+                            <td class="py-3">{{ $country->subregion }}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted fw-semibold py-3">Mata Uang</th>
+                            <td class="py-3"><span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 fs-6 rounded-pill">{{ $country->currency }}</span></td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted fw-semibold py-3">Total Populasi</th>
+                            <td class="py-3 fw-medium">
+                                <i class="bi bi-people-fill text-secondary me-1"></i> {{ number_format($country->population, 0, ',', '.') }} Jiwa
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-    <div class="card-header">
-
-        <h3>{{ $country->name }}</h3>
-
+            <div class="mt-4 d-flex justify-content-end">
+                <a href="{{ route('countries.index') }}" class="btn btn-outline-secondary px-4 py-2 rounded-pill shadow-sm">
+                    <i class="bi bi-arrow-left me-2"></i> Kembali ke Daftar
+                </a>
+            </div>
+            
+        </div>
     </div>
-
-    <div class="card-body">
-
-        <h1 style="font-size:80px">
-            {{ $country->flag }}
-        </h1>
-
-        <table class="table">
-
-            <tr>
-                <th>Country</th>
-                <td>{{ $country->name }}</td>
-            </tr>
-
-            <tr>
-                <th>Capital</th>
-                <td>{{ $country->capital }}</td>
-            </tr>
-
-            <tr>
-                <th>Region</th>
-                <td>{{ $country->region }}</td>
-            </tr>
-
-            <tr>
-                <th>Sub Region</th>
-                <td>{{ $country->subregion }}</td>
-            </tr>
-
-            <tr>
-                <th>Currency</th>
-                <td>{{ $country->currency }}</td>
-            </tr>
-
-            <tr>
-                <th>Population</th>
-                <td>{{ number_format($country->population) }}</td>
-            </tr>
-
-        </table>
-
-        <a href="{{ route('countries.index') }}"
-           class="btn btn-secondary">
-
-            Kembali
-
-        </a>
-
-    </div>
-
 </div>
-
 @endsection

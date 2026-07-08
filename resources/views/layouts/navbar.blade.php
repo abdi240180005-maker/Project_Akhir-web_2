@@ -24,17 +24,6 @@
 
         </div>
 
-        <div class="icon-box">
-
-            🔔
-
-        </div>
-
-        <div class="icon-box">
-
-            🔄
-
-        </div>
 
         <div class="profile">
 

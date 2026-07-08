@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Country;
 use Illuminate\Http\Request;
+use App\Models\MonitoredCountry;
 
 class CountryController extends Controller
 {
@@ -27,5 +28,35 @@ class CountryController extends Controller
     public function show(Country $country)
 {
     return view('countries.show', compact('country'));
+}
+public function monitor(Country $country)
+{
+    // Cek apakah sudah dimonitor
+    $exists = MonitoredCountry::where(
+        'country_code',
+        $country->iso2
+    )->exists();
+
+    if ($exists) {
+        return back()->with(
+            'warning',
+            'Negara sudah ada di Watchlist.'
+        );
+    }
+
+    MonitoredCountry::create([
+        'country_name' => $country->name,
+        'country_code' => $country->iso2,
+        'capital'      => $country->capital,
+        'region'       => $country->region,
+        'population'   => $country->population,
+        'currency'     => $country->currency,
+        'flag'         => $country->flag,
+    ]);
+
+    return back()->with(
+        'success',
+        'Negara berhasil ditambahkan ke Watchlist.'
+    );
 }
 }

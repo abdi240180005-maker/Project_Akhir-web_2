@@ -430,3 +430,24 @@ body{
 .clickable-card:hover{
     transform:translateY(-6px);
 }
+/* ===========================
+   CURRENCY
+=========================== */
+
+.currency-card{
+
+    transition:.3s;
+
+}
+
+.currency-card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+#currencyChart{
+
+    height:350px !important;
+
+}

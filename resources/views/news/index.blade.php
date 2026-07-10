@@ -1,83 +1,172 @@
 @extends('layouts.master')
 
 @section('content')
+
 <div class="container py-4">
 
     <div class="mb-4 pb-2 border-bottom">
         <h2 class="fw-bold text-dark mb-1 d-flex align-items-center gap-2">
-            <span>📰</span> Pemantauan Berita Global
+            <span>📰</span>
+            Pemantauan Berita Global
         </h2>
+
         <p class="text-muted mb-0">
-            Berita Terkini Mengenai Rantai Pasokan, Logistik & Ekonomi Dunia
+            Berita terkini mengenai Logistics, Trade, Shipping, dan Economy dunia.
         </p>
     </div>
 
-    @if(count($articles))
-    
-    <div class="row g-4">
-        @foreach($articles as $article)
-        <div class="col-lg-6">
-            <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden position-relative bg-white transition-all card-hover">
-                
-                @if(!empty($article['image']))
-                <div class="position-relative" style="height: 240px; overflow: hidden;">
-                    <img src="{{ $article['image'] }}"
-                         class="w-100 h-100"
-                         style="object-fit: cover;"
-                         alt="{{ $article['title'] }}">
-                    <span class="position-absolute top-0 start-0 m-3 badge bg-dark bg-opacity-75 backdrop-blur px-2 py-2 rounded-2 small fw-bold">
-                        📺 {{ $article['source']['name'] }}
-                    </span>
+    {{-- Filter --}}
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+
+            <form method="GET" action="{{ route('news.index') }}">
+
+                <div class="row">
+
+                    <div class="col-md-9">
+
+                        <select
+                            name="category"
+                            class="form-select">
+
+                            @foreach($categories as $key => $value)
+
+                            <option
+                                value="{{ $key }}"
+                                {{ $category == $key ? 'selected' : '' }}>
+
+                                {{ $value }}
+
+                            </option>
+
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <button
+                            class="btn btn-primary w-100">
+
+                            Cari Berita
+
+                        </button>
+
+                    </div>
+
                 </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    @if(count($articles))
+
+    <div class="row g-4">
+
+        @foreach($articles as $article)
+
+        <div class="col-lg-6">
+
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100 card-hover">
+
+                @if(!empty($article['image']))
+
+                <div style="height:240px;overflow:hidden;">
+
+                    <img
+                        src="{{ $article['image'] }}"
+                        class="w-100 h-100"
+                        style="object-fit:cover;">
+
+                </div>
+
                 @endif
 
-                <div class="card-body p-4 d-flex flex-column justify-content-between">
-                    <div>
-                        @if(empty($article['image']))
-                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3 py-1 small fw-bold mb-2">
+                <div class="card-body d-flex flex-column">
+
+                    <div class="mb-2">
+
+                        <span class="badge bg-dark">
+
                             {{ $article['source']['name'] }}
+
                         </span>
-                        @endif
 
-                        <h5 class="fw-bold text-dark mb-2 lh-base title-limit text-hover-primary">
-                            {{ $article['title'] }}
-                        </h5>
+                        <span class="badge bg-primary">
 
-                        <p class="text-muted small mb-3">
-                            {{ \Illuminate\Support\Str::limit($article['description'] ?? 'Tidak ada deskripsi tambahan untuk berita ini.', 140) }}
-                        </p>
+                            {{ ucfirst($category) }}
+
+                        </span>
+
                     </div>
 
-                    <div class="d-flex align-items-center gap-2 text-secondary pt-2 border-top border-light" style="font-size: 0.8rem;">
-                        <i class="bi bi-clock"></i>
-                        <span>
-                            {{ date('d M Y, H:i', strtotime($article['publishedAt'])) }} WIB
-                        </span>
+                    <h5 class="fw-bold">
+
+                        {{ $article['title'] }}
+
+                    </h5>
+
+                    <p class="text-muted">
+
+                        {{ \Illuminate\Support\Str::limit($article['description'] ?? 'Tidak ada deskripsi.',150) }}
+
+                    </p>
+
+                    @if(!empty($article['content']))
+
+                    <p class="small text-secondary">
+
+                        {{ \Illuminate\Support\Str::limit($article['content'],120) }}
+
+                    </p>
+
+                    @endif
+
+                    <div class="mt-auto">
+
+                        <small class="text-muted">
+
+                            📅
+
+                            {{ \Carbon\Carbon::parse($article['publishedAt'])->format('d M Y') }}
+
+                        </small>
+
                     </div>
+
                 </div>
 
-                <div class="card-footer bg-white border-0 p-4 pt-0">
-                    <a href="{{ $article['url'] }}"
-                       target="_blank"
-                       class="btn btn-outline-primary rounded-3 w-100 fw-bold d-flex align-items-center justify-content-center gap-2 py-2">
-                        <span>Baca Selengkapnya</span>
-                        <i class="bi bi-arrow-right"></i>
+                <div class="card-footer bg-white border-0">
+
+                    <a
+                        href="{{ $article['url'] }}"
+                        target="_blank"
+                        class="btn btn-outline-primary w-100">
+
+                        Baca Selengkapnya
+
                     </a>
+
                 </div>
 
             </div>
+
         </div>
+
         @endforeach
+
     </div>
 
     @else
 
-    <div class="alert alert-warning border-0 shadow-sm rounded-3 p-4 d-flex align-items-center gap-3">
-        <span class="fs-3">⚠️</span>
-        <div>
-            <h6 class="fw-bold mb-1 text-warning-emphasis">Berita Tidak Ditemukan</h6>
-            <p class="text-muted small mb-0">Saat ini tidak ada berita terbaru yang dapat dimuat. Silakan coba segarkan halaman beberapa saat lagi.</p>
-        </div>
+    <div class="alert alert-warning">
+
+        Tidak ada berita yang ditemukan.
+
     </div>
 
     @endif
@@ -85,22 +174,21 @@
 </div>
 
 <style>
-    .card-hover {
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .card-hover:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
-    }
-    .backdrop-blur {
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
-    }
-    .title-limit {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
+
+.card-hover{
+
+    transition:.25s;
+
+}
+
+.card-hover:hover{
+
+    transform:translateY(-5px);
+
+    box-shadow:0 .75rem 1.5rem rgba(0,0,0,.15)!important;
+
+}
+
 </style>
+
 @endsection

@@ -8,49 +8,66 @@ use App\Http\Controllers\WeatherController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\EconomyController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\RiskController;
+use App\Http\Controllers\WatchlistController;
+use App\Http\Controllers\ComparisonController;
 
-Route::get('/news', [NewsController::class, 'index'])
-    ->name('news.index');
-Route::get('/economy', [EconomyController::class, 'index'])
-    ->name('economy.index');
-Route::get('/currency', [CurrencyController::class, 'index'])
-    ->name('currency.index');
+Route::get('/comparison', [ComparisonController::class, 'index'])
+    ->name('comparison.index');
 
-Route::get('/weather', [WeatherController::class, 'index'])
-    ->name('weather.index');
+Route::get('/watchlist', [WatchlistController::class, 'index'])
+    ->name('watchlist.index');
 
+Route::delete('/watchlist/{watchlist}', [WatchlistController::class, 'destroy'])
+    ->name('watchlist.destroy');
+
+// Halaman Awal
 Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
-// Countries
-Route::get('/countries', [CountryController::class, 'index'])
-    ->name('countries.index');
+// Dashboard
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
-Route::get('/countries/{country}', [CountryController::class, 'show'])
-    ->name('countries.show');
-    Route::post('/countries/{country}/monitor',
-    [CountryController::class,'monitor'])
-    ->name('countries.monitor');
-Route::post(
-    '/countries/{country}/monitor',
-    [CountryController::class, 'monitor']
-)->name('countries.monitor');
+// Negara
+Route::middleware(['auth'])->group(function () {
 
-    // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->name('dashboard');
-
-    // Countries
     Route::get('/countries', [CountryController::class, 'index'])
         ->name('countries.index');
 
+    Route::get('/countries/{country}', [CountryController::class, 'show'])
+        ->name('countries.show');
+
+    Route::post('/countries/{country}/monitor', [CountryController::class, 'monitor'])
+        ->name('countries.monitor');
+
 });
 
+// Cuaca
+Route::get('/weather', [WeatherController::class, 'index'])
+    ->name('weather.index');
+
+// Mata Uang
+Route::get('/currency', [CurrencyController::class, 'index'])
+    ->name('currency.index');
+
+// Ekonomi
+Route::get('/economy', [EconomyController::class, 'index'])
+    ->name('economy.index');
+
+// Berita
+Route::get('/news', [NewsController::class, 'index'])
+    ->name('news.index');
+
+// Analisis Risiko
+Route::get('/risk', [RiskController::class, 'index'])
+    ->name('risk.index');
+
+// Profile
 Route::middleware('auth')->group(function () {
 
-    // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])
         ->name('profile.edit');
 

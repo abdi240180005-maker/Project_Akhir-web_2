@@ -18,18 +18,17 @@ class CountrySeeder extends Seeder
             return;
         }
 
-        $json = file_get_contents($path);
-        $countries = json_decode($json, true);
+        $countries = json_decode(file_get_contents($path), true);
 
         foreach ($countries as $country) {
 
             Country::create([
 
-                'name' => $country['name']['common'] ?? null,
+                'name' => $country['name']['common'] ?? $country['name'] ?? null,
 
-                'iso2' => $country['cca2'] ?? null,
+                'iso2' => trim($country['cca2'] ?? ''),
 
-                'iso3' => $country['cca3'] ?? null,
+                'iso3' => trim($country['cca3'] ?? ''),
 
                 'capital' => $country['capital'][0] ?? null,
 
@@ -41,21 +40,20 @@ class CountrySeeder extends Seeder
                     ? implode(',', array_keys($country['currencies']))
                     : null,
 
-                'population' => $country['population'] ?? 0,
+                'population' => (int)($country['population'] ?? 0),
 
                 'latitude' => $country['latlng'][0] ?? null,
 
                 'longitude' => $country['latlng'][1] ?? null,
 
-                'flag' => $country['flag'] ?? null,
-
-                'created_at' => now(),
-
-                'updated_at' => now(),
+                'flag' => $country['flag']
+                    ?? ($country['flag']['emoji'] ?? null),
 
             ]);
         }
 
-        $this->command->info('Import negara berhasil: '.Country::count().' data.');
+        $this->command->info(
+            'Import negara berhasil: ' . Country::count() . ' data.'
+        );
     }
 }

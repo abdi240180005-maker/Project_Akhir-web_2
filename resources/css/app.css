@@ -451,3 +451,109 @@ body{
     height:350px !important;
 
 }
+/* --- PALET WARNA THE CLASSIC LUXURY --- */
+:root {
+    --midnight-blue: #0B0C10;
+    --slate-blue: #1F2833;
+    --metallic-gold: #C5A059;
+    --soft-white: #F5F5F7;
+    --muted-silver: #C5A05980; /* Emas dengan opasitas untuk teks sekunder */
+}
+
+/* Container Utama Navbar */
+.top-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: var(--slate-blue);
+    border-bottom: 1px solid rgba(197, 160, 89, 0.2); /* Border bawah emas tipis */
+    color: var(--soft-white);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Sisi Kiri (Dashboard Title & Subtitle) */
+.top-navbar .left h4 {
+    color: var(--soft-white);
+    font-size: 1.25rem;
+    letter-spacing: 0.5px;
+}
+
+.top-navbar .left .text-muted {
+    color: rgba(245, 245, 247, 0.5) !important; /* Overwrite bawaan bootstrap */
+    font-size: 0.85rem;
+}
+
+/* Sisi Kanan (Widgets & Profile) */
+.top-navbar .right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+/* Box Tanggal Digital */
+.top-navbar .date-box {
+    background-color: rgba(11, 12, 16, 0.5);
+    border: 1px solid rgba(197, 160, 89, 0.15);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--metallic-gold);
+    letter-spacing: 0.5px;
+}
+
+/* Komponen Profil */
+.top-navbar .profile {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    padding-left: 1.5rem;
+}
+
+/* Avatar Inisial */
+.top-navbar .avatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #D4AF37 0%, var(--metallic-gold) 100%);
+    color: var(--midnight-blue);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(197, 160, 89, 0.2);
+    font-size: 1.1rem;
+}
+
+.top-navbar .profile strong {
+    color: var(--soft-white);
+    font-size: 0.95rem;
+}
+
+.top-navbar .profile small {
+    color: var(--metallic-gold);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* Tombol Logout Premium */
+.top-navbar .logout-btn {
+    background-color: transparent;
+    border: 1px solid rgba(220, 53, 69, 0.4);
+    color: #dc3545;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.top-navbar .logout-btn:hover {
+    background-color: #dc3545;
+    color: var(--soft-white);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
+    transform: translateY(-1px);
+}

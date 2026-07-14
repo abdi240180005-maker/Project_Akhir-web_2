@@ -2,19 +2,27 @@
 
     <div class="left">
 
-        <h4 class="mb-0 fw-bold">
+    <h4 class="mb-0 fw-bold">
 
-            Dashboard
+        @if(Auth::user()->role == 'admin')
 
-        </h4>
+            👨‍💼 Dashboard Admin
 
-        <small class="text-muted">
+        @else
 
-            Global Supply Chain Risk Intelligence System
+            📊 Dashboard Monitoring
 
-        </small>
+        @endif
 
-    </div>
+    </h4>
+
+    <small class="text-muted">
+
+        Global Supply Chain Risk Intelligence System
+
+    </small>
+
+</div>
 
     <div class="right">
 
@@ -23,7 +31,6 @@
             {{ now()->format('d M Y') }}
 
         </div>
-
 
         <div class="profile">
 
@@ -45,7 +52,15 @@
 
                 <small>
 
-                    Administrator
+                    @if(Auth::user()->role == 'admin')
+
+                        Administrator
+
+                    @else
+
+                        User
+
+                    @endif
 
                 </small>
 

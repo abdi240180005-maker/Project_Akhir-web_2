@@ -3,12 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Country;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class DashboardController extends Controller
 {
     public function index()
     {
+        // Jika Admin, arahkan ke Dashboard Admin
+        if (Auth::user()->role === 'admin') {
+
+            return redirect()->route('admin.dashboard');
+
+        }
+
         // =========================
         // TOTAL COUNTRY
         // =========================
@@ -32,7 +40,7 @@ class DashboardController extends Controller
                 ]
             );
 
-            if($weatherResponse->successful()){
+            if ($weatherResponse->successful()) {
 
                 $weather = $weatherResponse->json();
 
@@ -44,47 +52,47 @@ class DashboardController extends Controller
         // CURRENCY
         // =========================
 
-        $currency=[];
+        $currency = [];
 
-        try{
+        try {
 
-            $currencyResponse=Http::timeout(10)->get(
+            $currencyResponse = Http::timeout(10)->get(
                 'https://open.er-api.com/v6/latest/USD'
             );
 
-            if($currencyResponse->successful()){
+            if ($currencyResponse->successful()) {
 
-                $currency=$currencyResponse->json();
+                $currency = $currencyResponse->json();
 
             }
 
-        }catch(\Exception $e){}
+        } catch (\Exception $e) {}
 
         // =========================
         // NEWS
         // =========================
 
-        $articles=[];
+        $articles = [];
 
-        try{
+        try {
 
-            $newsResponse=Http::timeout(10)->get(
+            $newsResponse = Http::timeout(10)->get(
                 'https://gnews.io/api/v4/search',
                 [
-                    'q'=>'supply chain',
-                    'lang'=>'en',
-                    'max'=>3,
-                    'apikey'=>env('GNEWS_API_KEY')
+                    'q' => 'supply chain',
+                    'lang' => 'en',
+                    'max' => 3,
+                    'apikey' => env('GNEWS_API_KEY')
                 ]
             );
 
-            if($newsResponse->successful()){
+            if ($newsResponse->successful()) {
 
-                $articles=$newsResponse->json()['articles'] ?? [];
+                $articles = $newsResponse->json()['articles'] ?? [];
 
             }
 
-        }catch(\Exception $e){}
+        } catch (\Exception $e) {}
 
         return view(
             'dashboard.index',

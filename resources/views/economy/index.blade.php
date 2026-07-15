@@ -101,15 +101,15 @@
 
     <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 g-4 mb-4">
         <div class="col">
-            <div class="card card-custom shadow-sm h-100 border-0 p-3">
+            <div class="card card-custom shadow-sm h-100 border-0 p-3 bg-white">
                 <div class="card-body d-flex align-items-center gap-3">
                     <div class="icon-square bg-primary bg-opacity-10 text-primary flex-shrink-0">
                         <i class="bi bi-cash-stack fs-4"></i>
                     </div>
                     <div>
                         <small class="text-slate-500 fw-semibold d-block mb-1">PDB (Produk Domestik Bruto)</small>
-                        <h4 class="fw-bold text-primary mb-0">
-                            US$ {{ number_format($economy['value'] ?? 0,0,',','.') }}
+                        <h4 class="fw-bold text-primary mb-0 font-monospace">
+                            US$ {{ number_format($currentGdp ?? 0,0,',','.') }}
                         </h4>
                     </div>
                 </div>
@@ -117,15 +117,15 @@
         </div>
 
         <div class="col">
-            <div class="card card-custom shadow-sm h-100 border-0 p-3">
+            <div class="card card-custom shadow-sm h-100 border-0 p-3 bg-white">
                 <div class="card-body d-flex align-items-center gap-3">
                     <div class="icon-square bg-danger bg-opacity-10 text-danger flex-shrink-0">
                         <i class="bi bi-graph-up-arrow fs-4"></i>
                     </div>
                     <div>
                         <small class="text-slate-500 fw-semibold d-block mb-1">Tingkat Inflasi Tahunan</small>
-                        <h4 class="fw-bold text-danger mb-0">
-                            {{ $inflation ? number_format($inflation,2) : '-' }} %
+                        <h4 class="fw-bold text-danger mb-0 font-monospace">
+                            {{ $currentInflation ? number_format($currentInflation,2,',','.') : '-' }} %
                         </h4>
                     </div>
                 </div>
@@ -133,14 +133,14 @@
         </div>
 
         <div class="col">
-            <div class="card card-custom shadow-sm h-100 border-0 p-3">
+            <div class="card card-custom shadow-sm h-100 border-0 p-3 bg-white">
                 <div class="card-body d-flex align-items-center gap-3">
                     <div class="icon-square bg-warning bg-opacity-10 text-warning flex-shrink-0">
                         <i class="bi bi-currency-exchange fs-4"></i>
                     </div>
                     <div>
                         <small class="text-slate-500 fw-semibold d-block mb-1">Mata Uang Resmi</small>
-                        <h4 class="fw-bold text-slate-800 mb-0">
+                        <h4 class="fw-bold text-slate-800 mb-0 font-monospace">
                             {{ $country->currency ?? '-' }}
                         </h4>
                     </div>
@@ -150,10 +150,11 @@
     </div>
 
     <div class="row g-4">
+        {{-- GDP Trend --}}
         <div class="col-lg-6">
-            <div class="card card-custom shadow-sm border-0 overflow-hidden">
+            <div class="card card-custom shadow-sm border-0 overflow-hidden bg-white">
                 <div class="card-header bg-white border-bottom border-slate-100 fw-bold text-slate-800 py-3">
-                    📊 Visualisasi Nilai PDB (GDP)
+                    📊 Tren Nilai PDB (GDP - 5 Tahun Terakhir)
                 </div>
                 <div class="card-body p-4">
                     <div style="position: relative; height: 300px; width: 100%;">
@@ -163,14 +164,43 @@
             </div>
         </div>
 
+        {{-- Inflation Trend --}}
         <div class="col-lg-6">
-            <div class="card card-custom shadow-sm border-0 overflow-hidden">
+            <div class="card card-custom shadow-sm border-0 overflow-hidden bg-white">
                 <div class="card-header bg-white border-bottom border-slate-100 fw-bold text-slate-800 py-3">
-                    📈 Tren Persentase Inflasi
+                    📈 Tren Tingkat Inflasi (5 Tahun Terakhir)
                 </div>
                 <div class="card-body p-4">
                     <div style="position: relative; height: 300px; width: 100%;">
                         <canvas id="inflationChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Currency Trend --}}
+        <div class="col-lg-6">
+            <div class="card card-custom shadow-sm border-0 overflow-hidden bg-white">
+                <div class="card-header bg-white border-bottom border-slate-100 fw-bold text-slate-800 py-3">
+                    💱 Tren Perubahan Kurs (7 Hari Terakhir terhadap USD)
+                </div>
+                <div class="card-body p-4">
+                    <div style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="currencyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Risk Trend --}}
+        <div class="col-lg-6">
+            <div class="card card-custom shadow-sm border-0 overflow-hidden bg-white">
+                <div class="card-header bg-white border-bottom border-slate-100 fw-bold text-slate-800 py-3">
+                    ⚠️ Tren Indeks Risiko Rantai Pasok (7 Hari Terakhir)
+                </div>
+                <div class="card-body p-4">
+                    <div style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="riskChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -186,21 +216,29 @@
 document.addEventListener('DOMContentLoaded', function() {
     @if($country)
     
-    // Inisialisasi Grafik PDB
-    new Chart(
-        document.getElementById('gdpChart'),
-        {
-            type: 'bar',
+    // Inisialisasi Grafik GDP Trend (Line Chart 5 Tahun)
+    const ctxGdp = document.getElementById('gdpChart');
+    if (ctxGdp) {
+        const gradientGdp = ctxGdp.getContext('2d').createLinearGradient(0, 0, 0, 300);
+        gradientGdp.addColorStop(0, 'rgba(13, 110, 253, 0.15)');
+        gradientGdp.addColorStop(1, 'rgba(13, 110, 253, 0.00)');
+
+        new Chart(ctxGdp, {
+            type: 'line',
             data: {
-                labels: ['PDB (GDP)'],
+                labels: @json($gdpYears),
                 datasets: [{
-                    label: 'PDB',
-                    data: [{{ $economy['value'] ?? 0 }}],
-                    backgroundColor: 'rgba(13, 110, 253, 0.08)',
+                    label: 'PDB (GDP) USD',
+                    data: @json($gdpData),
+                    backgroundColor: gradientGdp,
                     borderColor: '#0d6efd',
-                    borderWidth: 2,
-                    borderRadius: 6,
-                    barThickness: 60
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.35,
+                    pointBackgroundColor: '#0d6efd',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4
                 }]
             },
             options: {
@@ -208,26 +246,47 @@ document.addEventListener('DOMContentLoaded', function() {
                 maintainAspectRatio: false,
                 plugins: {
                     legend: { display: false }
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: {
+                        grid: { color: '#f1f5f9' },
+                        ticks: {
+                            callback: function(value) {
+                                if (value >= 1e12) return '$ ' + (value / 1e12).toFixed(1) + ' T';
+                                if (value >= 1e9) return '$ ' + (value / 1e9).toFixed(1) + ' Miliar';
+                                return '$ ' + value.toLocaleString('id-ID');
+                            }
+                        }
+                    }
                 }
             }
-        }
-    );
+        });
+    }
     
-    // Inisialisasi Grafik Inflasi
-    new Chart(
-        document.getElementById('inflationChart'),
-        {
-            type: 'bar',
+    // Inisialisasi Grafik Inflation Trend (Line Chart 5 Tahun)
+    const ctxInf = document.getElementById('inflationChart');
+    if (ctxInf) {
+        const gradientInf = ctxInf.getContext('2d').createLinearGradient(0, 0, 0, 300);
+        gradientInf.addColorStop(0, 'rgba(220, 53, 69, 0.15)');
+        gradientInf.addColorStop(1, 'rgba(220, 53, 69, 0.00)');
+
+        new Chart(ctxInf, {
+            type: 'line',
             data: {
-                labels: ['Inflasi'],
+                labels: @json($inflationYears),
                 datasets: [{
                     label: 'Inflasi (%)',
-                    data: [{{ $inflation ?? 0 }}],
-                    backgroundColor: 'rgba(220, 53, 69, 0.08)',
+                    data: @json($inflationData),
+                    backgroundColor: gradientInf,
                     borderColor: '#dc3545',
-                    borderWidth: 2,
-                    borderRadius: 6,
-                    barThickness: 60
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.35,
+                    pointBackgroundColor: '#dc3545',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4
                 }]
             },
             options: {
@@ -235,10 +294,115 @@ document.addEventListener('DOMContentLoaded', function() {
                 maintainAspectRatio: false,
                 plugins: {
                     legend: { display: false }
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: {
+                        grid: { color: '#f1f5f9' },
+                        ticks: {
+                            callback: function(value) {
+                                return value.toFixed(1) + ' %';
+                            }
+                        }
+                    }
                 }
             }
-        }
-    );
+        });
+    }
+
+    // Inisialisasi Grafik Currency Trend (Line Chart 7 Hari)
+    const ctxCurr = document.getElementById('currencyChart');
+    if (ctxCurr) {
+        const gradientCurr = ctxCurr.getContext('2d').createLinearGradient(0, 0, 0, 300);
+        gradientCurr.addColorStop(0, 'rgba(255, 193, 7, 0.15)');
+        gradientCurr.addColorStop(1, 'rgba(255, 193, 7, 0.00)');
+
+        new Chart(ctxCurr, {
+            type: 'line',
+            data: {
+                labels: @json($currencyDays),
+                datasets: [{
+                    label: '1 USD ke {{ $mainCurrency }}',
+                    data: @json($currencyData),
+                    backgroundColor: gradientCurr,
+                    borderColor: '#ffc107',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.35,
+                    pointBackgroundColor: '#ffc107',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: {
+                        grid: { color: '#f1f5f9' },
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString('id-ID');
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Inisialisasi Grafik Risk Trend (Line Chart 7 Hari)
+    const ctxRisk = document.getElementById('riskChart');
+    if (ctxRisk) {
+        const gradientRisk = ctxRisk.getContext('2d').createLinearGradient(0, 0, 0, 300);
+        gradientRisk.addColorStop(0, 'rgba(111, 66, 193, 0.15)');
+        gradientRisk.addColorStop(1, 'rgba(111, 66, 193, 0.00)');
+
+        new Chart(ctxRisk, {
+            type: 'line',
+            data: {
+                labels: @json($currencyDays), // Menggunakan tanggal 7 hari terakhir yang sama
+                datasets: [{
+                    label: 'Indeks Risiko',
+                    data: @json($riskData),
+                    backgroundColor: gradientRisk,
+                    borderColor: '#6f42c1',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.35,
+                    pointBackgroundColor: '#6f42c1',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: {
+                        min: 0,
+                        max: 100,
+                        grid: { color: '#f1f5f9' },
+                        ticks: {
+                            callback: function(value) {
+                                return value + ' / 100';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
     
     @endif
 });

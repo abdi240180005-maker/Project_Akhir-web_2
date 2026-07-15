@@ -12,7 +12,11 @@ class CountryController extends Controller
     {
         $search = $request->search;
 
-        $countries = Country::when($search, function ($query) use ($search) {
+        $countries = Country::where(function ($query) {
+                $query->where('un_member', true)
+                      ->orWhere('independent', true);
+            })
+            ->when($search, function ($query) use ($search) {
                 $query->where('name', 'like', "%{$search}%");
             })
             ->orderBy('name')
@@ -20,9 +24,18 @@ class CountryController extends Controller
 
         return view('countries.index', [
             'countries' => $countries,
-            'totalCountries' => Country::count(),
-            'asiaCountries' => Country::where('region', 'Asia')->count(),
-            'europeCountries' => Country::where('region', 'Europe')->count(),
+            'totalCountries' => Country::where(function ($query) {
+                $query->where('un_member', true)
+                      ->orWhere('independent', true);
+            })->count(),
+            'asiaCountries' => Country::where(function ($query) {
+                $query->where('un_member', true)
+                      ->orWhere('independent', true);
+            })->where('region', 'Asia')->count(),
+            'europeCountries' => Country::where(function ($query) {
+                $query->where('un_member', true)
+                      ->orWhere('independent', true);
+            })->where('region', 'Europe')->count(),
         ]);
     }
     public function show(Country $country)
@@ -40,7 +53,7 @@ public function monitor(Country $country)
     if ($exists) {
         return back()->with(
             'warning',
-            'Negara sudah ada di Watchlist.'
+            'Negara sudah ada di Daftar Negara Favorit.'
         );
     }
 
@@ -56,7 +69,7 @@ public function monitor(Country $country)
 
     return back()->with(
         'success',
-        'Negara berhasil ditambahkan ke Watchlist.'
+        'Negara berhasil ditambahkan ke Daftar Negara Favorit.'
     );
 }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Country;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Http\Controllers\SentimentController;
 
 class RiskController extends Controller
 {
@@ -92,17 +93,21 @@ class RiskController extends Controller
 
                 if ($inflation < 3) {
 
-                    $inflationRisk = 10;
+                    $inflationRisk = 5;
 
                 } elseif ($inflation < 6) {
 
-                    $inflationRisk = 20;
+                    $inflationRisk = 10;
 
                 } else {
 
-                    $inflationRisk = 30;
+                    $inflationRisk = 20;
 
                 }
+
+            } else {
+
+                $inflationRisk = 10;
 
             }
 
@@ -114,29 +119,36 @@ class RiskController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | MATA UANG
+        | MATA UANG (Currency - 10%)
         |--------------------------------------------------------------------------
         */
 
-        if (in_array($country->currency, ['USD', 'EUR'])) {
+        $primaryCurrencies = explode(',', $country->currency ?? '');
+        $mainCurrency = $primaryCurrencies[0] ?? '';
+
+        if (in_array($mainCurrency, ['USD', 'EUR'])) {
+
+            $currencyRisk = 2;
+
+        } elseif (in_array($mainCurrency, ['JPY', 'SGD'])) {
 
             $currencyRisk = 5;
 
-        } elseif (in_array($country->currency, ['JPY', 'SGD'])) {
-
-            $currencyRisk = 10;
-
         } else {
 
-            $currencyRisk = 20;
+            $currencyRisk = 10;
 
         }
 
         /*
         |--------------------------------------------------------------------------
-        | BERITA
+        | BERITA SENTIMEN ANALISIS (News Sentiment - 40%)
         |--------------------------------------------------------------------------
         */
+
+        $newsRisk = 20; // default medium
+        $sentimentResult = 'Neutral';
+        $sentimentText = '';
 
         try {
 
@@ -154,28 +166,31 @@ class RiskController extends Controller
 
             if ($response->successful()) {
 
-                $jumlah =
-                    count($response->json()['articles'] ?? []);
+                $articles = $response->json()['articles'] ?? [];
+                
+                foreach ($articles as $article) {
+                    $sentimentText .= ' ' . ($article['title'] ?? '') . ' ' . ($article['description'] ?? '');
+                }
 
-                if ($jumlah <= 1) {
+                if (!empty(trim($sentimentText))) {
+                    $sentimentController = new SentimentController();
+                    $sentimentAnalysis = $sentimentController->analyze($sentimentText);
+                    $sentimentResult = $sentimentAnalysis['sentiment'] ?? 'Neutral';
 
-                    $newsRisk = 5;
-
-                } elseif ($jumlah <= 3) {
-
-                    $newsRisk = 15;
-
-                } else {
-
-                    $newsRisk = 25;
-
+                    if ($sentimentResult === 'Positive') {
+                        $newsRisk = 10;
+                    } elseif ($sentimentResult === 'Neutral') {
+                        $newsRisk = 20;
+                    } else {
+                        $newsRisk = 40;
+                    }
                 }
 
             }
 
         } catch (\Exception $e) {
 
-            $newsRisk = 10;
+            $newsRisk = 20;
 
         }
 
@@ -185,12 +200,12 @@ class RiskController extends Controller
             $currencyRisk +
             $newsRisk;
 
-        if ($totalRisk <= 30) {
+        if ($totalRisk <= 35) {
 
             $status = 'Risiko Rendah';
             $color = 'success';
 
-        } elseif ($totalRisk <= 60) {
+        } elseif ($totalRisk <= 65) {
 
             $status = 'Risiko Sedang';
             $color = 'warning';
@@ -213,7 +228,8 @@ class RiskController extends Controller
                 'newsRisk',
                 'totalRisk',
                 'status',
-                'color'
+                'color',
+                'sentimentResult'
             )
         );
     }

@@ -88,7 +88,7 @@
 
                 <div class="card-body d-flex flex-column">
 
-                    <div class="mb-2">
+                    <div class="mb-2 d-flex flex-wrap gap-2 align-items-center">
 
                         <span class="badge bg-dark">
 
@@ -101,6 +101,23 @@
                             {{ ucfirst($category) }}
 
                         </span>
+
+                        @if(isset($article['sentiment']))
+                            @php
+                                $badgeClass = 'bg-secondary';
+                                $sentimentLabel = 'Netral';
+                                if ($article['sentiment'] === 'Positive') {
+                                    $badgeClass = 'bg-success';
+                                    $sentimentLabel = 'Positif';
+                                } elseif ($article['sentiment'] === 'Negative') {
+                                    $badgeClass = 'bg-danger';
+                                    $sentimentLabel = 'Negatif';
+                                }
+                            @endphp
+                            <span class="badge {{ $badgeClass }} bg-opacity-10 text-{{ str_replace('bg-', '', $badgeClass) }} border border-{{ str_replace('bg-', '', $badgeClass) }}-subtle rounded-pill px-2.5 py-1" style="font-size: 0.72rem;">
+                                Sentimen: {{ $sentimentLabel }}
+                            </span>
+                        @endif
 
                     </div>
 

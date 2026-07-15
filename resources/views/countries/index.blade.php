@@ -29,6 +29,23 @@
 @endpush
 
 @section('content')
+@php
+if (!function_exists('format_gdp_id')) {
+    function format_gdp_id($value) {
+        if (!$value) return '-';
+        if ($value >= 1e12) {
+            return '$ ' . number_format($value / 1e12, 2, ',', '.') . ' T';
+        }
+        if ($value >= 1e9) {
+            return '$ ' . number_format($value / 1e9, 2, ',', '.') . ' Miliar';
+        }
+        if ($value >= 1e6) {
+            return '$ ' . number_format($value / 1e6, 2, ',', '.') . ' Juta';
+        }
+        return '$ ' . number_format($value, 0, ',', '.');
+    }
+}
+@endphp
 
 @if(session('success'))
 <div class="alert alert-success border-0 shadow-sm rounded-3 d-flex align-items-center py-3 px-4 mb-4">
@@ -146,11 +163,14 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light text-slate-800 border-bottom">
                     <tr>
-                        <th class="ps-4 py-3 small text-uppercase fw-bold" style="width: 12%;">Bendera</th>
-                        <th class="py-3 small text-uppercase fw-bold" style="width: 23%;">Negara</th>
-                        <th class="py-3 small text-uppercase fw-bold" style="width: 23%;">Ibu Kota</th>
-                        <th class="text-center py-3 small text-uppercase fw-bold" style="width: 17%;">Wilayah</th>
-                        <th class="text-end pe-4 py-3 small text-uppercase fw-bold text-slate-800" style="width: 25%;">Aksi</th>
+                        <th class="ps-4 py-3 small text-uppercase fw-bold" style="width: 8%;">Bendera</th>
+                        <th class="py-3 small text-uppercase fw-bold" style="width: 17%;">Negara</th>
+                        <th class="py-3 small text-uppercase fw-bold text-end" style="width: 16%;">PDB (GDP)</th>
+                        <th class="py-3 small text-uppercase fw-bold text-end" style="width: 11%;">Inflasi</th>
+                        <th class="py-3 small text-uppercase fw-bold text-end" style="width: 14%;">Populasi</th>
+                        <th class="py-3 small text-uppercase fw-bold text-center" style="width: 12%;">Mata Uang</th>
+                        <th class="py-3 small text-uppercase fw-bold text-center" style="width: 12%;">Skor Risiko</th>
+                        <th class="text-end pe-4 py-3 small text-uppercase fw-bold text-slate-800" style="width: 10%;">Aksi</th>
                     </tr>
                 </thead>
 
@@ -167,25 +187,61 @@
 
                         <td class="py-3 border-slate-100">
                             <span class="fw-bold text-slate-800">{{ $country->name }}</span>
+                            <small class="d-block text-muted" style="font-size: 0.75rem;">Capital: {{ $country->capital ?? '-' }}</small>
                         </td>
 
-                        <td class="py-3 border-slate-100 text-slate-500">
-                            {{ $country->capital ?? '-' }}
+                        <td class="py-3 border-slate-100 text-end fw-medium text-dark">
+                            {{ format_gdp_id($country->gdp) }}
+                        </td>
+
+                        <td class="py-3 border-slate-100 text-end text-slate-600">
+                            {{ $country->inflation_rate ? number_format($country->inflation_rate, 2, ',', '.') . '%' : '-' }}
+                        </td>
+
+                        <td class="py-3 border-slate-100 text-end text-slate-600">
+                            {{ number_format($country->population, 0, ',', '.') }}
                         </td>
 
                         <td class="py-3 border-slate-100 text-center">
-                            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-1.5 rounded-2 fw-bold d-inline-block">
-                                {{ $country->region ?? '-' }}
+                            @if($country->currency)
+                                <div class="d-flex flex-wrap gap-1 justify-content-center">
+                                    @foreach(explode(',', $country->currency) as $curr)
+                                        <span class="badge bg-secondary bg-opacity-10 text-secondary font-monospace px-2 py-1 rounded-1" style="font-size: 0.72rem;">{{ $curr }}</span>
+                                    @endforeach
+                                </div>
+                            @else
+                                -
+                            @endif
+                        </td>
+
+                        <td class="py-3 border-slate-100 text-center">
+                            @php
+                                $score = $country->risk_score ?? 0;
+                                if ($score <= 30) {
+                                    $riskStatus = 'Rendah';
+                                    $riskClass = 'bg-success bg-opacity-10 text-success';
+                                } elseif ($score <= 60) {
+                                    $riskStatus = 'Sedang';
+                                    $riskClass = 'bg-warning bg-opacity-10 text-warning-emphasis';
+                                } else {
+                                    $riskStatus = 'Tinggi';
+                                    $riskClass = 'bg-danger bg-opacity-10 text-danger';
+                                }
+                            @endphp
+                            <span class="badge {{ $riskClass }} px-2.5 py-1.5 rounded-2 fw-bold d-inline-flex align-items-center gap-1" style="font-size: 0.8rem;">
+                                <span class="d-inline-block rounded-circle" style="width: 6px; height: 6px; background-color: currentColor;"></span>
+                                {{ $score }} ({{ $riskStatus }})
                             </span>
                         </td>
 
                         <td class="text-end pe-4 py-3 border-slate-100">
-                            <div class="d-inline-flex gap-2">
+                            <div class="d-inline-flex gap-1">
                                 <a
                                     href="{{ route('countries.show', $country) }}"
-                                    class="btn btn-light btn-sm fw-medium text-slate-800 border d-inline-flex align-items-center px-2.5 py-1.5">
-                                    <i class="bi bi-eye text-slate-500 me-1"></i>
-                                    Detail
+                                    class="btn btn-light btn-sm fw-medium text-slate-800 border d-inline-flex align-items-center justify-content-center"
+                                    style="width: 32px; height: 32px;"
+                                    title="Detail">
+                                    <i class="bi bi-eye text-slate-500"></i>
                                 </a>
 
                                 <form
@@ -195,9 +251,10 @@
                                     @csrf
                                     <button
                                         type="submit"
-                                        class="btn btn-success btn-sm fw-medium d-inline-flex align-items-center px-2.5 py-1.5">
-                                        <i class="bi bi-plus-circle me-1"></i>
-                                        Monitor
+                                        class="btn btn-warning btn-sm fw-medium d-inline-flex align-items-center justify-content-center text-white"
+                                        style="width: 32px; height: 32px; background-color: #ffc107; border-color: #ffc107;"
+                                        title="Tambah ke Favorit">
+                                        <i class="bi bi-star-fill"></i>
                                     </button>
                                 </form>
                             </div>
@@ -205,7 +262,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="text-center py-5 text-muted">
+                        <td colspan="8" class="text-center py-5 text-muted">
                             <i class="bi bi-exclamation-circle d-block fs-3 mb-2 text-slate-500"></i>
                             Tidak ada data negara.
                         </td>

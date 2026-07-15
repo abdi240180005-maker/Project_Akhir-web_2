@@ -85,8 +85,9 @@
             <div class="card card-custom shadow-sm h-100 border-0 p-3">
                 <div class="card-body d-flex align-items-center justify-content-between">
                     <div>
-                        <span class="text-slate-500 fw-semibold small text-uppercase tracking-wider d-block mb-1">Risiko Cuaca</span>
+                        <span class="text-slate-500 fw-semibold small text-uppercase tracking-wider d-block mb-1">Risiko Cuaca (30%)</span>
                         <h3 class="fw-bold text-slate-800 mb-0 font-monospace">{{ $weatherRisk }}</h3>
+                        <small class="text-slate-400 d-block mt-1">Maksimum: 30</small>
                     </div>
                     <div class="icon-box bg-info bg-opacity-10 text-info">
                         🌤
@@ -99,8 +100,9 @@
             <div class="card card-custom shadow-sm h-100 border-0 p-3">
                 <div class="card-body d-flex align-items-center justify-content-between">
                     <div>
-                        <span class="text-slate-500 fw-semibold small text-uppercase tracking-wider d-block mb-1">Risiko Inflasi</span>
+                        <span class="text-slate-500 fw-semibold small text-uppercase tracking-wider d-block mb-1">Risiko Inflasi (20%)</span>
                         <h3 class="fw-bold text-slate-800 mb-0 font-monospace">{{ $inflationRisk }}</h3>
+                        <small class="text-slate-400 d-block mt-1">Maksimum: 20</small>
                     </div>
                     <div class="icon-box bg-danger bg-opacity-10 text-danger">
                         📈
@@ -113,8 +115,9 @@
             <div class="card card-custom shadow-sm h-100 border-0 p-3">
                 <div class="card-body d-flex align-items-center justify-content-between">
                     <div>
-                        <span class="text-slate-500 fw-semibold small text-uppercase tracking-wider d-block mb-1">Risiko Valas</span>
+                        <span class="text-slate-500 fw-semibold small text-uppercase tracking-wider d-block mb-1">Risiko Valas (10%)</span>
                         <h3 class="fw-bold text-slate-800 mb-0 font-monospace">{{ $currencyRisk }}</h3>
+                        <small class="text-slate-400 d-block mt-1">Maksimum: 10</small>
                     </div>
                     <div class="icon-box bg-warning bg-opacity-10 text-warning">
                         💱
@@ -127,8 +130,19 @@
             <div class="card card-custom shadow-sm h-100 border-0 p-3">
                 <div class="card-body d-flex align-items-center justify-content-between">
                     <div>
-                        <span class="text-slate-500 fw-semibold small text-uppercase tracking-wider d-block mb-1">Risiko Berita</span>
+                        <span class="text-slate-500 fw-semibold small text-uppercase tracking-wider d-block mb-1">Risiko Berita (40%)</span>
                         <h3 class="fw-bold text-slate-800 mb-0 font-monospace">{{ $newsRisk }}</h3>
+                        @php
+                            $sentimentBadge = 'bg-secondary';
+                            if ($sentimentResult === 'Positive') {
+                                $sentimentBadge = 'bg-success';
+                            } elseif ($sentimentResult === 'Negative') {
+                                $sentimentBadge = 'bg-danger';
+                            }
+                        @endphp
+                        <small class="text-slate-500 d-block mt-1">
+                            Sentimen: <span class="badge {{ $sentimentBadge }} bg-opacity-10 text-{{ str_replace('bg-', '', $sentimentBadge) }} font-monospace px-1.5 py-0.5" style="font-size: 0.72rem;">{{ $sentimentResult }}</span>
+                        </small>
                     </div>
                     <div class="icon-box bg-primary bg-opacity-10 text-primary">
                         📰
@@ -155,9 +169,15 @@
                         {{ $status }}
                     </span>
                 </div>
-                <div class="mt-3 pt-3 border-top border-slate-100 bg-light bg-opacity-50 p-2 rounded-3">
+                <div class="mt-3 pt-3 border-top border-slate-100 bg-light bg-opacity-50 p-3 rounded-3 text-start">
                     <p class="small text-slate-500 mb-0">
-                        <i class="bi bi-info-circle me-1"></i> Skor dihitung menggunakan pembobotan terdistribusi otomatis.
+                        <i class="bi bi-info-circle me-1"></i> <strong>Distribusi Bobot Risiko:</strong>
+                        <ul class="small text-slate-500 mb-0 ps-3 mt-1">
+                            <li>Cuaca (Bobot 30%) - Skor: {{ $weatherRisk }}/30</li>
+                            <li>Volatilitas Inflasi (Bobot 20%) - Skor: {{ $inflationRisk }}/20</li>
+                            <li>Fluktuasi Valas (Bobot 10%) - Skor: {{ $currencyRisk }}/10</li>
+                            <li>Sentimen Berita (Bobot 40%) - Skor: {{ $newsRisk }}/40</li>
+                        </ul>
                     </p>
                 </div>
             </div>

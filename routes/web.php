@@ -2,18 +2,19 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ComparisonController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EconomyController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\PortController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RiskController;
+use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\WatchlistController;
 use App\Http\Controllers\WeatherController;
-use App\Http\Controllers\UserManagementController;
-use App\Http\Controllers\ArticleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,6 +79,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/watchlist/{watchlist}', [WatchlistController::class, 'destroy'])
         ->name('watchlist.destroy');
 
+    // Pelabuhan
+    Route::get('/ports', [PortController::class, 'userIndex'])
+        ->name('ports.index');
+
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])
         ->name('profile.edit');
@@ -100,14 +105,19 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])
         ->name('admin.dashboard');
 
+    Route::resource('admin/users', UserManagementController::class)
+        ->names('admin.users');
+
+    Route::resource('admin/articles', ArticleController::class)
+        ->names('admin.articles');
+
+    Route::resource('admin/ports', PortController::class)
+        ->names('admin.ports');
+    Route::post(
+    'admin/ports/import',
+    [PortController::class, 'import']
+)->name('admin.ports.import');
+
 });
 
 require __DIR__.'/auth.php';
-Route::resource(
-    'admin/users',
-    UserManagementController::class
-)->names('admin.users');
-Route::resource(
-    'admin/articles',
-    ArticleController::class
-)->names('admin.articles');

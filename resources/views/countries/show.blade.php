@@ -1,6 +1,23 @@
 @extends('layouts.master')
 
 @section('content')
+@php
+if (!function_exists('format_gdp_id')) {
+    function format_gdp_id($value) {
+        if (!$value) return '-';
+        if ($value >= 1e12) {
+            return '$ ' . number_format($value / 1e12, 2, ',', '.') . ' T (Triliun)';
+        }
+        if ($value >= 1e9) {
+            return '$ ' . number_format($value / 1e9, 2, ',', '.') . ' Miliar';
+        }
+        if ($value >= 1e6) {
+            return '$ ' . number_format($value / 1e6, 2, ',', '.') . ' Juta';
+        }
+        return '$ ' . number_format($value, 0, ',', '.');
+    }
+}
+@endphp
 <div class="container py-4">
     <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
         
@@ -51,6 +68,39 @@
                             <th class="text-muted fw-semibold py-3">Total Populasi</th>
                             <td class="py-3 fw-medium">
                                 <i class="bi bi-people-fill text-secondary me-1"></i> {{ number_format($country->population, 0, ',', '.') }} Jiwa
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted fw-semibold py-3">PDB (GDP)</th>
+                            <td class="py-3 fw-medium text-dark">
+                                {{ format_gdp_id($country->gdp) }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted fw-semibold py-3">Tingkat Inflasi</th>
+                            <td class="py-3">
+                                {{ $country->inflation_rate ? number_format($country->inflation_rate, 2, ',', '.') . '%' : '-' }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted fw-semibold py-3">Skor Risiko</th>
+                            <td class="py-3">
+                                @php
+                                    $score = $country->risk_score ?? 0;
+                                    if ($score <= 30) {
+                                        $riskStatus = 'Rendah';
+                                        $riskClass = 'bg-success bg-opacity-10 text-success border border-success-subtle';
+                                    } elseif ($score <= 60) {
+                                        $riskStatus = 'Sedang';
+                                        $riskClass = 'bg-warning bg-opacity-10 text-warning-emphasis border border-warning-subtle';
+                                    } else {
+                                        $riskStatus = 'Tinggi';
+                                        $riskClass = 'bg-danger bg-opacity-10 text-danger border border-danger-subtle';
+                                    }
+                                @endphp
+                                <span class="badge {{ $riskClass }} px-3 py-2 fs-6 rounded-pill fw-bold">
+                                    {{ $score }} ({{ $riskStatus }})
+                                </span>
                             </td>
                         </tr>
                     </tbody>

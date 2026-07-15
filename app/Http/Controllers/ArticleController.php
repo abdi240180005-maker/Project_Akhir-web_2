@@ -26,16 +26,21 @@ class ArticleController extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'category' => 'required',
-            'author' => 'required',
-            'content' => 'required',
+            'country' => 'required',
+            'risk_level' => 'required',
+            'conclusion' => 'required',
         ]);
 
-        Article::create($request->all());
+        Article::create([
+            'title' => $request->title,
+            'country' => $request->country,
+            'risk_level' => $request->risk_level,
+            'conclusion' => $request->conclusion,
+        ]);
 
         return redirect()
             ->route('admin.articles.index')
-            ->with('success', 'Artikel berhasil ditambahkan.');
+            ->with('success', 'Analisis berhasil ditambahkan.');
     }
 
     public function edit(Article $article)
@@ -50,16 +55,21 @@ class ArticleController extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'category' => 'required',
-            'author' => 'required',
-            'content' => 'required',
+            'country' => 'required',
+            'risk_level' => 'required',
+            'conclusion' => 'required',
         ]);
 
-        $article->update($request->all());
+        $article->update([
+            'title' => $request->title,
+            'country' => $request->country,
+            'risk_level' => $request->risk_level,
+            'conclusion' => $request->conclusion,
+        ]);
 
         return redirect()
             ->route('admin.articles.index')
-            ->with('success', 'Artikel berhasil diperbarui.');
+            ->with('success', 'Analisis berhasil diperbarui.');
     }
 
     public function destroy(Article $article)
@@ -68,6 +78,6 @@ class ArticleController extends Controller
 
         return redirect()
             ->route('admin.articles.index')
-            ->with('success', 'Artikel berhasil dihapus.');
+            ->with('success', 'Analisis berhasil dihapus.');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Http\Controllers\SentimentController;
 
 class NewsController extends Controller
 {
@@ -32,6 +33,14 @@ class NewsController extends Controller
 
         if ($response->successful()) {
             $articles = $response->json()['articles'] ?? [];
+            
+            $sentimentController = new SentimentController();
+            foreach ($articles as &$article) {
+                $text = ($article['title'] ?? '') . ' ' . ($article['description'] ?? '');
+                $analysis = $sentimentController->analyze($text);
+                $article['sentiment'] = $analysis['sentiment'] ?? 'Neutral';
+            }
+            unset($article);
         }
 
         return view(

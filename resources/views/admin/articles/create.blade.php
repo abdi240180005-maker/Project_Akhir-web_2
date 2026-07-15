@@ -9,7 +9,7 @@
         <div class="card-header">
 
             <h4 class="mb-0">
-                📰 Tambah Artikel
+                📋 Tambah Analisis
             </h4>
 
         </div>
@@ -23,9 +23,7 @@
                 <div class="mb-3">
 
                     <label class="form-label">
-
-                        Judul Artikel
-
+                        Judul Analisis
                     </label>
 
                     <input
@@ -39,31 +37,12 @@
                 <div class="mb-3">
 
                     <label class="form-label">
-
-                        Kategori
-
+                        Negara
                     </label>
 
                     <input
                         type="text"
-                        name="category"
-                        class="form-control"
-                        placeholder="Contoh: Logistics"
-                        required>
-
-                </div>
-
-                <div class="mb-3">
-
-                    <label class="form-label">
-
-                        Penulis
-
-                    </label>
-
-                    <input
-                        type="text"
-                        name="author"
+                        name="country"
                         class="form-control"
                         required>
 
@@ -72,14 +51,41 @@
                 <div class="mb-3">
 
                     <label class="form-label">
+                        Tingkat Risiko
+                    </label>
 
-                        Isi Artikel
+                    <select
+                        name="risk_level"
+                        class="form-select"
+                        required>
 
+                        <option value="">-- Pilih Risiko --</option>
+
+                        <option value="Rendah">
+                            Rendah
+                        </option>
+
+                        <option value="Sedang">
+                            Sedang
+                        </option>
+
+                        <option value="Tinggi">
+                            Tinggi
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Kesimpulan
                     </label>
 
                     <textarea
-                        name="content"
-                        rows="8"
+                        name="conclusion"
+                        rows="6"
                         class="form-control"
                         required></textarea>
 
@@ -87,7 +93,7 @@
 
                 <button class="btn btn-primary">
 
-                    Simpan
+                    Simpan Analisis
 
                 </button>
 

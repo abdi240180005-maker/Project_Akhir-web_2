@@ -111,9 +111,62 @@ class ComparisonController extends Controller
             }
 
         } catch (\Exception $e) {
-
             $inflation = null;
+        }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Cuaca (Open-Meteo)
+        |--------------------------------------------------------------------------
+        */
+        $weather = null;
+        if ($country->latitude && $country->longitude) {
+            try {
+                $response = Http::connectTimeout(3)
+                    ->timeout(5)
+                    ->get('https://api.open-meteo.com/v1/forecast', [
+                        'latitude' => $country->latitude,
+                        'longitude' => $country->longitude,
+                        'current' => 'temperature_2m,wind_speed_10m,relative_humidity_2m,weather_code'
+                    ]);
+
+                if ($response->successful()) {
+                    $json = $response->json();
+                    $temp = $json['current']['temperature_2m'] ?? null;
+                    $wind = $json['current']['wind_speed_10m'] ?? null;
+                    $code = $json['current']['weather_code'] ?? 0;
+                    
+                    // Map WMO weather code to readable description
+                    $condition = 'Cerah';
+                    if (in_array($code, [1, 2, 3])) $condition = 'Berawan';
+                    elseif (in_array($code, [45, 48])) $condition = 'Kabut';
+                    elseif (in_array($code, [51, 53, 55, 61, 63, 65, 80, 81, 82])) $condition = 'Hujan';
+                    elseif (in_array($code, [71, 73, 75, 77, 85, 86])) $condition = 'Salju';
+                    elseif (in_array($code, [95, 96, 99])) $condition = 'Badai Petir';
+
+                    $weather = [
+                        'temp' => $temp,
+                        'wind' => $wind,
+                        'condition' => $condition,
+                    ];
+                }
+            } catch (\Exception $e) {
+                $weather = null;
+            }
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Risk (Database & Level mapping)
+        |--------------------------------------------------------------------------
+        */
+        $riskScore = $country->risk_score ?? 35;
+        if ($riskScore <= 30) {
+            $riskLevel = 'Rendah';
+        } elseif ($riskScore <= 60) {
+            $riskLevel = 'Sedang';
+        } else {
+            $riskLevel = 'Tinggi';
         }
 
         return [
@@ -127,6 +180,12 @@ class ComparisonController extends Controller
             'capital' => $country->capital,
 
             'region' => $country->region,
+
+            'weather' => $weather,
+
+            'risk_score' => $riskScore,
+
+            'risk_level' => $riskLevel,
 
         ];
     }

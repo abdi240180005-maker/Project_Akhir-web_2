@@ -9,15 +9,15 @@
         <div>
 
             <h2 class="fw-bold">
-                📰 Kelola Artikel
+                📋 Kelola Analisis
             </h2>
 
             <p class="text-muted mb-0">
-                Kelola seluruh artikel analisis sistem.
+                Kelola hasil analisis risiko rantai pasok global.
             </p>
 
             <small class="text-muted">
-                Total Artikel : {{ $articles->count() }}
+                Total Analisis : {{ $articles->count() }}
             </small>
 
         </div>
@@ -34,7 +34,7 @@
             <a href="{{ route('admin.articles.create') }}"
                class="btn btn-primary">
 
-                Tambah Artikel
+                Tambah Analisis
 
             </a>
 
@@ -63,15 +63,10 @@
                     <tr>
 
                         <th width="60">No</th>
-
-                        <th>Judul</th>
-
-                        <th>Kategori</th>
-
-                        <th>Penulis</th>
-
-                        <th>Dibuat</th>
-
+                        <th>Judul Analisis</th>
+                        <th>Negara</th>
+                        <th width="140">Risiko</th>
+                        <th>Tanggal</th>
                         <th width="170">Aksi</th>
 
                     </tr>
@@ -88,11 +83,37 @@
 
                         <td>{{ $article->title }}</td>
 
-                        <td>{{ $article->category }}</td>
+                        <td>{{ $article->country }}</td>
 
-                        <td>{{ $article->author }}</td>
+                        <td>
 
-                        <td>{{ $article->created_at->format('d M Y') }}</td>
+                            @if($article->risk_level=='Rendah')
+
+                                <span class="badge bg-success">
+                                    Rendah
+                                </span>
+
+                            @elseif($article->risk_level=='Sedang')
+
+                                <span class="badge bg-warning text-dark">
+                                    Sedang
+                                </span>
+
+                            @else
+
+                                <span class="badge bg-danger">
+                                    Tinggi
+                                </span>
+
+                            @endif
+
+                        </td>
+
+                        <td>
+
+                            {{ $article->created_at->format('d M Y') }}
+
+                        </td>
 
                         <td>
 
@@ -103,17 +124,16 @@
 
                             </a>
 
-                            <form
-                                action="{{ route('admin.articles.destroy',$article) }}"
-                                method="POST"
-                                class="d-inline">
+                            <form action="{{ route('admin.articles.destroy',$article) }}"
+                                  method="POST"
+                                  class="d-inline">
 
                                 @csrf
                                 @method('DELETE')
 
                                 <button
                                     class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Hapus artikel ini?')">
+                                    onclick="return confirm('Yakin ingin menghapus analisis ini?')">
 
                                     Hapus
 
@@ -131,7 +151,7 @@
 
                         <td colspan="6" class="text-center">
 
-                            Belum ada artikel.
+                            Belum ada data analisis.
 
                         </td>
 

@@ -33,7 +33,7 @@ class WeatherController extends Controller
     [
         'latitude' => $country->latitude,
         'longitude' => $country->longitude,
-        'current' => 'temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code',
+        'current' => 'temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code,precipitation',
         'daily' => 'weather_code,temperature_2m_max,temperature_2m_min',
         'timezone' => 'auto'
     ]

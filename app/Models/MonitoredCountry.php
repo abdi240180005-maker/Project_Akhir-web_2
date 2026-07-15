@@ -15,4 +15,9 @@ class MonitoredCountry extends Model
         'currency',
         'flag',
     ];
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_code', 'iso2');
+    }
 }

@@ -9,9 +9,7 @@
         <div class="card-header">
 
             <h4 class="mb-0">
-
-                ✏️ Edit Artikel
-
+                📋 Edit Analisis
             </h4>
 
         </div>
@@ -26,9 +24,7 @@
                 <div class="mb-3">
 
                     <label class="form-label">
-
-                        Judul Artikel
-
+                        Judul Analisis
                     </label>
 
                     <input
@@ -43,16 +39,14 @@
                 <div class="mb-3">
 
                     <label class="form-label">
-
-                        Kategori
-
+                        Negara
                     </label>
 
                     <input
                         type="text"
-                        name="category"
+                        name="country"
                         class="form-control"
-                        value="{{ old('category', $article->category) }}"
+                        value="{{ old('country', $article->country) }}"
                         required>
 
                 </div>
@@ -60,33 +54,41 @@
                 <div class="mb-3">
 
                     <label class="form-label">
-
-                        Penulis
-
+                        Tingkat Risiko
                     </label>
 
-                    <input
-                        type="text"
-                        name="author"
-                        class="form-control"
-                        value="{{ old('author', $article->author) }}"
+                    <select
+                        name="risk_level"
+                        class="form-select"
                         required>
+
+                        <option value="Rendah" {{ $article->risk_level == 'Rendah' ? 'selected' : '' }}>
+                            Rendah
+                        </option>
+
+                        <option value="Sedang" {{ $article->risk_level == 'Sedang' ? 'selected' : '' }}>
+                            Sedang
+                        </option>
+
+                        <option value="Tinggi" {{ $article->risk_level == 'Tinggi' ? 'selected' : '' }}>
+                            Tinggi
+                        </option>
+
+                    </select>
 
                 </div>
 
                 <div class="mb-3">
 
                     <label class="form-label">
-
-                        Isi Artikel
-
+                        Kesimpulan
                     </label>
 
                     <textarea
-                        name="content"
-                        rows="8"
+                        name="conclusion"
+                        rows="6"
                         class="form-control"
-                        required>{{ old('content', $article->content) }}</textarea>
+                        required>{{ old('conclusion', $article->conclusion) }}</textarea>
 
                 </div>
 

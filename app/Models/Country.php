@@ -18,5 +18,10 @@ class Country extends Model
         'latitude',
         'longitude',
         'flag',
+        'un_member',
+        'independent',
+        'gdp',
+        'inflation_rate',
+        'risk_score',
     ];
 }

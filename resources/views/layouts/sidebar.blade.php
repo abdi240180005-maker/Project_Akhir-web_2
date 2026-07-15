@@ -1,8 +1,6 @@
-<!-- Sisi Kiri / Sidebar Utama (Midnight Blue) -->
 <div class="sidebar d-flex flex-column justify-content-between" style="height: 100vh; overflow-y: auto; background-color: #0B0C10; border-right: 1px solid rgba(197, 160, 89, 0.15);">
 
     <div>
-        <!-- Logo Header -->
         <div class="logo d-flex align-items-center gap-3 p-3 border-bottom border-secondary border-opacity-10" style="background-color: #1F2833;">
             <div class="logo-icon">
                 <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm"
@@ -20,47 +18,42 @@
             </div>
         </div>
 
-        <!-- Menu Navigation -->
         <div class="menu mt-4 px-3">
             
-            <!-- ==================== AREA PROTEKSI MENU ADMIN ==================== -->
-            <!-- ==================== AREA PROTEKSI MENU ADMIN ==================== -->
-@if(Auth::user()->role == 'admin')
-    <div class="mb-2 px-2">
-        <div class="menu-title">MENU ADMIN</div>
-    </div>
+            @if(Auth::user()->role == 'admin')
+                <div class="mb-2 px-2">
+                    <div class="menu-title">MENU ADMIN</div>
+                </div>
 
-    <a href="{{ route('admin.dashboard') }}"
-       class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3 {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-        <i class="bi bi-speedometer2 me-3 fs-5"></i>
-        <span class="nav-text">Dashboard Admin</span>
-    </a>
+                <a href="{{ route('admin.dashboard') }}"
+                   class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3 {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                    <i class="bi bi-speedometer2 me-3 fs-5"></i>
+                    <span class="nav-text">Dashboard Admin</span>
+                </a>
 
-    <!-- KELOLA USER (Rutenya sudah diarahkan ke admin.users.index) -->
-    <a href="{{ route('admin.users.index') }}"
-       class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3 {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-        <i class="bi bi-people-fill me-3 fs-5"></i>
-        <span class="nav-text">Kelola User</span>
-    </a>
+                <a href="{{ route('admin.users.index') }}"
+                   class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3 {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                    <i class="bi bi-people-fill me-3 fs-5"></i>
+                    <span class="nav-text">Kelola User</span>
+                </a>
 
-    <!-- KELOLA ARTIKEL (Rutenya mengarah ke admin.articles.index) -->
-    <a href="{{ route('admin.articles.index') }}"
-       class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3 {{ request()->routeIs('admin.articles.*') ? 'active' : '' }}">
-        <i class="bi bi-newspaper me-3 fs-5"></i>
-        <span class="nav-text">Kelola Artikel</span>
-    </a>
+                <a href="{{ route('admin.articles.index') }}"
+                   class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3 {{ request()->routeIs('admin.articles.*') ? 'active' : '' }}">
+                    <i class="bi bi-newspaper me-3 fs-5"></i>
+                    <span class="nav-text">Kelola Artikel</span>
+                </a>
 
-    <a href="#" class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3">
-        <i class="bi bi-geo-alt-fill me-3 fs-5"></i>
-        <span class="nav-text">Kelola Pelabuhan</span>
-    </a>
+                <a href="{{ route('admin.ports.index') }}"
+                   class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3 {{ request()->routeIs('admin.ports.*') ? 'active' : '' }}">
+                    <i class="bi bi-geo-alt-fill me-3 fs-5"></i>
+                    <span class="nav-text">Kelola Pelabuhan</span>
+                </a>
 
-    <hr style="border-color: rgba(197, 160, 89, 0.15); opacity: 1; margin: 1.5rem 0;">
-@endif
+                <hr style="border-color: rgba(197, 160, 89, 0.15); opacity: 1; margin: 1.5rem 0;">
+            @endif
 
-            <!-- ==================== MENU MONITORING (SEMUA USER) ==================== -->
             <div class="mb-2 px-2">
-                <div class="menu-title">MENU MONITORING</div>
+                <div class="menu-title">UTAMA</div>
             </div>
 
             <a href="{{ route('dashboard') }}"
@@ -69,11 +62,37 @@
                 <span class="nav-text">Dashboard Monitoring</span>
             </a>
 
+            <a href="{{ route('watchlist.index') }}"
+               class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3 {{ request()->routeIs('watchlist.*') ? 'active' : '' }}">
+                <i class="bi bi-bookmark-star-fill me-3 fs-5"></i>
+                <span class="nav-text">Negara Favorit</span>
+            </a>
+
+            <div class="mb-2 px-2">
+                <div class="menu-title">ANALISIS & RISIKO</div>
+            </div>
+
             <a href="{{ route('countries.index') }}"
                class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3 {{ request()->routeIs('countries.*') ? 'active' : '' }}">
                 <i class="bi bi-globe2 me-3 fs-5"></i>
                 <span class="nav-text">Negara</span>
             </a>
+
+            <a href="{{ route('risk.index') }}"
+               class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3 {{ request()->routeIs('risk.*') ? 'active' : '' }}">
+                <i class="bi bi-shield-exclamation me-3 fs-5"></i>
+                <span class="nav-text">Analisis Risiko</span>
+            </a>
+
+            <a href="{{ route('comparison.index') }}"
+               class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3 {{ request()->routeIs('comparison.*') ? 'active' : '' }}">
+                <i class="bi bi-bar-chart-line-fill me-3 fs-5"></i>
+                <span class="nav-text">Perbandingan Negara</span>
+            </a>
+
+            <div class="mb-2 px-2">
+                <div class="menu-title">INDIKATOR RANTAI PASOK</div>
+            </div>
 
             <a href="{{ route('weather.index') }}"
                class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3 {{ request()->routeIs('weather.*') ? 'active' : '' }}">
@@ -99,33 +118,14 @@
                 <span class="nav-text">Berita</span>
             </a>
 
-            <a href="#" class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3">
+            <a href="{{ route('ports.index') }}"
+               class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3 {{ request()->is('ports*') || request()->routeIs('ports.*') ? 'active' : '' }}">
                 <i class="bi bi-anchor me-3 fs-5"></i>
                 <span class="nav-text">Pelabuhan</span>
             </a>
-
-            <a href="{{ route('risk.index') }}"
-               class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3 {{ request()->routeIs('risk.*') ? 'active' : '' }}">
-                <i class="bi bi-shield-exclamation me-3 fs-5"></i>
-                <span class="nav-text">Analisis Risiko</span>
-            </a>
-
-            <a href="{{ route('comparison.index') }}"
-               class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3 {{ request()->routeIs('comparison.*') ? 'active' : '' }}">
-                <i class="bi bi-bar-chart-line-fill me-3 fs-5"></i>
-                <span class="nav-text">Perbandingan Negara</span>
-            </a>
-
-            <a href="{{ route('watchlist.index') }}"
-               class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3 {{ request()->routeIs('watchlist.*') ? 'active' : '' }}">
-                <i class="bi bi-bookmark-star-fill me-3 fs-5"></i>
-                <span class="nav-text">Daftar Pantau</span>
-            </a>
-
         </div>
     </div>
 
-    <!-- Sidebar Footer (Informasi Akun) -->
     <div class="sidebar-footer p-3 mb-3 border-top border-secondary border-opacity-10">
         <div class="user-card d-flex align-items-center gap-3 p-2 rounded-3" style="background-color: #1F2833; border: 1px solid rgba(255,255,255,0.05);">
             
@@ -154,43 +154,45 @@
 <style>
     /* Styling Menu Navigasi Normal */
     .sidebar .menu .nav-link-custom {
-        color: rgba(245, 245, 247, 0.65) !important;
+        color: rgba(245, 245, 247, 0.7) !important;
         text-decoration: none;
         position: relative;
-        transition: all 0.25s ease-in-out;
+        transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+        display: flex;
+        align-items: center;
     }
 
-    /* Efek Hover */
+    /* Efek Hover Glassmorphic */
     .sidebar .menu .nav-link-custom:hover {
-        background-color: #1F2833 !important;
-        color: #C5A059 !important;
-        padding-left: 1.25rem !important;
+        background-color: rgba(197, 160, 89, 0.08) !important;
+        color: #E5BA73 !important;
+        transform: translateX(4px);
     }
 
     /* Efek Menu Aktif */
     .sidebar .menu .nav-link-custom.active {
-        background-color: #1F2833 !important;
-        color: #C5A059 !important;
+        background-color: rgba(197, 160, 89, 0.12) !important;
+        color: #E5BA73 !important;
         font-weight: 600;
-        border-left: 3px solid #C5A059;
+        border-left: 3px solid #E5BA73;
         border-radius: 0 8px 8px 0 !important;
-        box-shadow: inset 5px 0 15px rgba(197, 160, 89, 0.05);
+        box-shadow: 0 4px 15px rgba(197, 160, 89, 0.08);
     }
     
     .sidebar .menu .nav-link-custom.active i {
-        color: #C5A059 !important;
+        color: #E5BA73 !important;
     }
 
     .sidebar .nav-text {
         font-weight: 500;
-        font-size: 0.875rem;
+        font-size: 0.86rem;
     }
 
     .avatar-fallback {
         width: 36px;
         height: 36px;
         background: linear-gradient(135deg, #1F2833 0%, #0B0C10 100%);
-        color: #C5A059;
+        color: #E5BA73;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -203,12 +205,14 @@
 
     .menu-title {
         color: #C5A059;
-        opacity: 0.5;
-        font-size: .72rem;
-        letter-spacing: .08em;
-        font-weight: 700;
-        margin: 22px 10px 8px;
+        opacity: 0.65;
+        font-size: 0.66rem;
+        letter-spacing: 0.08em;
+        font-weight: 800;
+        margin: 20px 10px 6px;
         text-transform: uppercase;
+        border-bottom: 1px solid rgba(197, 160, 89, 0.1);
+        padding-bottom: 4px;
     }
     
     ::-moz-selection { background-color: #C5A059 !important; color: #0B0C10 !important; }

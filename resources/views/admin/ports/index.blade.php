@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.admin')
 
 @section('content')
 <div class="container py-4">
@@ -6,7 +6,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="fw-bold">
-                ⚓ Kelola Pelabuhan
+                ⚓ Kelola Dataset Pelabuhan
             </h2>
             <p class="text-muted mb-0">
                 Kelola data pelabuhan untuk monitoring supply chain.

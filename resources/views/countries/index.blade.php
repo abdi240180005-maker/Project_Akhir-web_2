@@ -139,12 +139,18 @@ if (!function_exists('format_gdp_id')) {
                             <span class="input-group-text bg-white border-0 text-muted ps-3">
                                 <i class="bi bi-search"></i>
                             </span>
-                            <input
-                                type="text"
+                            <select
                                 name="search"
-                                class="form-control border-0 bg-white text-slate-800"
-                                placeholder="Cari negara..."
-                                value="{{ request('search') }}">
+                                class="form-select border-0 bg-white text-slate-800"
+                                onchange="this.form.submit()"
+                                style="outline: none; box-shadow: none;">
+                                <option value="">-- Semua Negara --</option>
+                                @foreach($allCountriesList as $item)
+                                    <option value="{{ $item->name }}" {{ request('search') == $item->name ? 'selected' : '' }}>
+                                        {{ $item->name }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-2">

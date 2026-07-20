@@ -1,7 +1,7 @@
-<div class="sidebar d-flex flex-column justify-content-between" style="height: 100vh; overflow-y: auto; background-color: #0B0C10; border-right: 1px solid rgba(197, 160, 89, 0.15);">
+<div class="sidebar d-flex flex-column justify-content-between" style="height: 100vh; overflow-y: auto; background-color: var(--midnight-blue); border-right: 1px solid rgba(197, 160, 89, 0.15);">
 
     <div>
-        <div class="logo d-flex align-items-center gap-3 p-3 border-bottom border-secondary border-opacity-10" style="background-color: #1F2833;">
+        <div class="logo d-flex align-items-center gap-3 p-3 border-bottom border-secondary border-opacity-10" style="background-color: var(--slate-blue);">
             <div class="logo-icon">
                 <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm"
                      style="width:48px; height:48px; background: linear-gradient(135deg, #D4AF37 0%, #C5A059 100%); font-size:22px; box-shadow: 0 0 12px rgba(197, 160, 89, 0.25);">
@@ -22,34 +22,16 @@
             
             @if(Auth::user()->role == 'admin')
                 <div class="mb-2 px-2">
-                    <div class="menu-title">MENU ADMIN</div>
+                    <div class="menu-title">ADMINISTRASI</div>
                 </div>
 
                 <a href="{{ route('admin.dashboard') }}"
-                   class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3 {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                    <i class="bi bi-speedometer2 me-3 fs-5"></i>
-                    <span class="nav-text">Dashboard Admin</span>
+                   class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3 text-warning fw-bold">
+                    <i class="bi bi-shield-lock-fill me-3 fs-5 text-warning"></i>
+                    <span class="nav-text text-warning">Masuk Panel Admin</span>
                 </a>
 
-                <a href="{{ route('admin.users.index') }}"
-                   class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3 {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                    <i class="bi bi-people-fill me-3 fs-5"></i>
-                    <span class="nav-text">Kelola User</span>
-                </a>
-
-                <a href="{{ route('admin.articles.index') }}"
-                   class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3 {{ request()->routeIs('admin.articles.*') ? 'active' : '' }}">
-                    <i class="bi bi-newspaper me-3 fs-5"></i>
-                    <span class="nav-text">Kelola Artikel</span>
-                </a>
-
-                <a href="{{ route('admin.ports.index') }}"
-                   class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3 {{ request()->routeIs('admin.ports.*') ? 'active' : '' }}">
-                    <i class="bi bi-geo-alt-fill me-3 fs-5"></i>
-                    <span class="nav-text">Kelola Pelabuhan</span>
-                </a>
-
-                <hr style="border-color: rgba(197, 160, 89, 0.15); opacity: 1; margin: 1.5rem 0;">
+                <hr style="border-color: rgba(197, 160, 89, 0.15); opacity: 1; margin: 1rem 0;">
             @endif
 
             <div class="mb-2 px-2">
@@ -90,6 +72,12 @@
                 <span class="nav-text">Perbandingan Negara</span>
             </a>
 
+            <a href="{{ route('visualisasi.index') }}"
+               class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3 {{ request()->routeIs('visualisasi.*') ? 'active' : '' }}">
+                <i class="bi bi-bar-chart-fill me-3 fs-5"></i>
+                <span class="nav-text">Visualisasi Data</span>
+            </a>
+
             <div class="mb-2 px-2">
                 <div class="menu-title">INDIKATOR RANTAI PASOK</div>
             </div>
@@ -120,14 +108,14 @@
 
             <a href="{{ route('ports.index') }}"
                class="nav-link-custom d-flex align-items-center py-2 px-3 my-1 rounded-3 {{ request()->is('ports*') || request()->routeIs('ports.*') ? 'active' : '' }}">
-                <i class="bi bi-anchor me-3 fs-5"></i>
+                <i class="bi bi-geo-alt-fill me-3 fs-5"></i>
                 <span class="nav-text">Pelabuhan</span>
             </a>
         </div>
     </div>
 
     <div class="sidebar-footer p-3 mb-3 border-top border-secondary border-opacity-10">
-        <div class="user-card d-flex align-items-center gap-3 p-2 rounded-3" style="background-color: #1F2833; border: 1px solid rgba(255,255,255,0.05);">
+        <div class="user-card d-flex align-items-center gap-3 p-2 rounded-3" style="background-color: var(--slate-blue); border: 1px solid rgba(255,255,255,0.05);">
             
             <div class="avatar-fallback shadow-sm">
                 {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
@@ -157,7 +145,7 @@
         color: rgba(245, 245, 247, 0.7) !important;
         text-decoration: none;
         position: relative;
-        transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         display: flex;
         align-items: center;
     }
@@ -166,7 +154,7 @@
     .sidebar .menu .nav-link-custom:hover {
         background-color: rgba(197, 160, 89, 0.08) !important;
         color: #E5BA73 !important;
-        transform: translateX(4px);
+        transform: translateX(6px);
     }
 
     /* Efek Menu Aktif */
@@ -217,4 +205,13 @@
     
     ::-moz-selection { background-color: #C5A059 !important; color: #0B0C10 !important; }
     ::selection { background-color: #C5A059 !important; color: #0B0C10 !important; }
+
+    .sidebar .menu .nav-link-custom.logout-link:hover {
+        background-color: rgba(220, 53, 69, 0.08) !important;
+        color: #ff8787 !important;
+    }
+    .sidebar .menu .nav-link-custom.logout-link:hover i,
+    .sidebar .menu .nav-link-custom.logout-link:hover span {
+        color: #ff8787 !important;
+    }
 </style>

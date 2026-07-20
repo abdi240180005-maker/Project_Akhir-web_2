@@ -22,8 +22,16 @@ class CountryController extends Controller
             ->orderBy('name')
             ->paginate(10);
 
+        $allCountriesList = Country::where(function ($query) {
+                $query->where('un_member', true)
+                      ->orWhere('independent', true);
+            })
+            ->orderBy('name')
+            ->get(['name', 'iso2']);
+
         return view('countries.index', [
             'countries' => $countries,
+            'allCountriesList' => $allCountriesList,
             'totalCountries' => Country::where(function ($query) {
                 $query->where('un_member', true)
                       ->orWhere('independent', true);

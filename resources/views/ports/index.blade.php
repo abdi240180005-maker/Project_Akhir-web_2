@@ -282,9 +282,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }).setView([20, 0], 2);
 
     L.tileLayer(
-        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
         {
-            attribution: '&copy; OpenStreetMap'
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 20
         }
     ).addTo(map);
 
@@ -304,24 +306,33 @@ document.addEventListener('DOMContentLoaded', function () {
                 const delay = {{ $port->delay_hours }};
                 const region = "{{ $port->region }}";
                 
-                let color = '#2ec4b6'; // Rendah (Hijau)
+                let color = '#00ffcc'; // Rendah (Neon Green/Turquoise)
                 let badgeClass = 'bg-success';
                 if (congestion === 'Sedang') {
-                    color = '#fd7e14'; // Sedang (Jingga)
+                    color = '#ff9f1c'; // Sedang (Neon Orange)
                     badgeClass = 'bg-warning text-dark';
                 } else if (congestion === 'Tinggi') {
-                    color = '#dc3545'; // Tinggi (Merah)
+                    color = '#ff0055'; // Tinggi (Neon Pink-Red)
                     badgeClass = 'bg-danger';
                 }
 
-                // Gunakan L.circleMarker berbentuk bulatan seperti mockup
+                // Lingkaran luar (efek pendaran neon glow)
+                const glow = L.circleMarker([lat, lng], {
+                    radius: 13,
+                    fillColor: color,
+                    color: 'transparent',
+                    fillOpacity: 0.25,
+                    interactive: false
+                }).addTo(map);
+
+                // Lingkaran dalam (core marker)
                 const marker = L.circleMarker([lat, lng], {
-                    radius: 7,
+                    radius: 6,
                     fillColor: color,
                     color: '#ffffff',
-                    weight: 1.5,
+                    weight: 1.2,
                     opacity: 1,
-                    fillOpacity: 0.85
+                    fillOpacity: 0.95
                 }).addTo(map);
 
                 const popupContent = `

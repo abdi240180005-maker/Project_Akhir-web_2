@@ -158,8 +158,8 @@
                 <div class="py-3">
                     <span class="text-slate-500 fw-bold small text-uppercase tracking-widest d-block mb-3">Akumulasi Skor</span>
                     
-                    <div class="d-inline-flex align-items-center justify-content-center bg-{{ $color }} bg-opacity-10 rounded-circle mb-3" style="width: 130px; height: 130px;">
-                        <h1 class="display-4 fw-black text-{{ $color }} mb-0 font-monospace" style="letter-spacing: -2px;">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 130px; height: 130px; border: 3px dashed var(--metallic-gold); background-color: rgba(197, 160, 89, 0.05); box-shadow: 0 0 20px rgba(197, 160, 89, 0.1);">
+                        <h1 class="display-4 fw-black text-dark mb-0 font-monospace" style="letter-spacing: -2px; color: var(--slate-blue) !important;">
                             {{ $totalRisk }}
                         </h1>
                     </div>
@@ -170,15 +170,47 @@
                     </span>
                 </div>
                 <div class="mt-3 pt-3 border-top border-slate-100 bg-light bg-opacity-50 p-3 rounded-3 text-start">
-                    <p class="small text-slate-500 mb-0">
-                        <i class="bi bi-info-circle me-1"></i> <strong>Distribusi Bobot Risiko:</strong>
-                        <ul class="small text-slate-500 mb-0 ps-3 mt-1">
-                            <li>Cuaca (Bobot 30%) - Skor: {{ $weatherRisk }}/30</li>
-                            <li>Volatilitas Inflasi (Bobot 20%) - Skor: {{ $inflationRisk }}/20</li>
-                            <li>Fluktuasi Valas (Bobot 10%) - Skor: {{ $currencyRisk }}/10</li>
-                            <li>Sentimen Berita (Bobot 40%) - Skor: {{ $newsRisk }}/40</li>
-                        </ul>
-                    </p>
+                    <h6 class="small text-dark fw-bold mb-3"><i class="bi bi-diagram-3 me-1 text-primary"></i> Rincian Parameter Risiko:</h6>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span class="text-slate-500" style="font-size: 0.8rem;">Risiko Cuaca</span>
+                            <strong class="text-dark" style="font-size: 0.8rem;">{{ $weatherRisk }}/30</strong>
+                        </div>
+                        <div class="progress" style="height: 5px;">
+                            <div class="progress-bar bg-info" style="width: {{ ($weatherRisk/30)*100 }}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span class="text-slate-500" style="font-size: 0.8rem;">Risiko Inflasi</span>
+                            <strong class="text-dark" style="font-size: 0.8rem;">{{ $inflationRisk }}/20</strong>
+                        </div>
+                        <div class="progress" style="height: 5px;">
+                            <div class="progress-bar bg-danger" style="width: {{ ($inflationRisk/20)*100 }}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span class="text-slate-500" style="font-size: 0.8rem;">Risiko Valas</span>
+                            <strong class="text-dark" style="font-size: 0.8rem;">{{ $currencyRisk }}/10</strong>
+                        </div>
+                        <div class="progress" style="height: 5px;">
+                            <div class="progress-bar bg-warning" style="width: {{ ($currencyRisk/10)*100 }}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-0">
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span class="text-slate-500" style="font-size: 0.8rem;">Risiko Berita</span>
+                            <strong class="text-dark" style="font-size: 0.8rem;">{{ $newsRisk }}/40</strong>
+                        </div>
+                        <div class="progress" style="height: 5px;">
+                            <div class="progress-bar bg-primary" style="width: {{ ($newsRisk/40)*100 }}%"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -193,6 +225,62 @@
                 <div class="card-body p-4">
                     <div style="position: relative; height: 320px; width: 100%;">
                         <canvas id="riskChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Artikel Analisis Resmi Section -->
+    <div class="row g-4 mt-2">
+        <div class="col-12">
+            <div class="card card-custom shadow-sm border-0">
+                <div class="card-header bg-white border-0 pt-4 px-4 pb-0 d-flex align-items-center justify-content-between">
+                    <span class="fw-bold text-slate-800 fs-6">
+                        <i class="bi bi-journal-text text-primary me-2"></i> Artikel Analisis Resmi Administrator
+                    </span>
+                    @if($country)
+                        <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle px-3 py-1.5 rounded-pill fs-7 fw-semibold">
+                            Negara: {{ $country->name }}
+                        </span>
+                    @endif
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        @forelse($databaseArticles as $art)
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card h-100 border border-slate-100 rounded-3 p-3 shadow-none bg-slate-50 d-flex flex-column justify-content-between">
+                                    <div>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="badge bg-secondary bg-opacity-10 text-secondary font-monospace px-2 py-0.5 rounded" style="font-size: 0.7rem;">
+                                                {{ $art->country }}
+                                            </span>
+                                            @php
+                                                $riskBadge = 'bg-secondary';
+                                                if ($art->risk_level === 'Rendah') $riskBadge = 'bg-success';
+                                                elseif ($art->risk_level === 'Sedang') $riskBadge = 'bg-warning text-dark';
+                                                elseif ($art->risk_level === 'Tinggi') $riskBadge = 'bg-danger';
+                                            @endphp
+                                            <span class="badge {{ $riskBadge }} rounded-pill px-2 py-0.5" style="font-size: 0.7rem;">
+                                                Risiko {{ $art->risk_level }}
+                                            </span>
+                                        </div>
+                                        <h6 class="fw-bold text-slate-800 mb-2">{{ $art->title }}</h6>
+                                        <p class="text-slate-600 small mb-3 text-break" style="white-space: pre-line;">{{ $art->conclusion }}</p>
+                                    </div>
+                                    <div class="border-top border-slate-200 pt-2 mt-auto d-flex justify-content-between align-items-center">
+                                        <small class="text-slate-400" style="font-size: 0.72rem;">
+                                            <i class="bi bi-clock me-1"></i> {{ $art->created_at->format('d M Y') }}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="col-12 text-center py-5 text-muted">
+                                <i class="bi bi-journal-x display-6 mb-2 d-block"></i>
+                                Belum ada artikel analisis resmi yang dipublikasikan untuk negara ini.
+                            </div>
+                        @endforelse
                     </div>
                 </div>
             </div>

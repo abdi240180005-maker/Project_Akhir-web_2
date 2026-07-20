@@ -13,6 +13,7 @@ use App\Http\Controllers\PortController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RiskController;
 use App\Http\Controllers\UserManagementController;
+use App\Http\Controllers\VisualisasiController;
 use App\Http\Controllers\WatchlistController;
 use App\Http\Controllers\WeatherController;
 
@@ -71,6 +72,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Perbandingan Negara
     Route::get('/comparison', [ComparisonController::class, 'index'])
         ->name('comparison.index');
+
+    // Visualisasi Data Statistik
+    Route::get('/visualisasi', [VisualisasiController::class, 'index'])
+        ->name('visualisasi.index');
 
     // Daftar Pantau
     Route::get('/watchlist', [WatchlistController::class, 'index'])

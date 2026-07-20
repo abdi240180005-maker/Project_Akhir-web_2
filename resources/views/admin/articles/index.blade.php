@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.admin')
 
 @section('content')
 
@@ -9,7 +9,7 @@
         <div>
 
             <h2 class="fw-bold">
-                📋 Kelola Analisis
+                📋 Kelola Artikel Analisis
             </h2>
 
             <p class="text-muted mb-0">

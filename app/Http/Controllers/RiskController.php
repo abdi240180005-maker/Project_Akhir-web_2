@@ -217,6 +217,10 @@ class RiskController extends Controller
 
         }
 
+        $databaseArticles = \App\Models\Article::when($country, function ($query) use ($country) {
+            $query->where('country', 'like', '%' . $country->name . '%');
+        })->latest()->get();
+
         return view(
             'risk.index',
             compact(
@@ -229,7 +233,8 @@ class RiskController extends Controller
                 'totalRisk',
                 'status',
                 'color',
-                'sentimentResult'
+                'sentimentResult',
+                'databaseArticles'
             )
         );
     }

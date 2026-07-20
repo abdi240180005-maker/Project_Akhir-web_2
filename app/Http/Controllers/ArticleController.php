@@ -36,6 +36,8 @@ class ArticleController extends Controller
             'country' => $request->country,
             'risk_level' => $request->risk_level,
             'conclusion' => $request->conclusion,
+            'category' => 'Analysis',
+            'author' => 'Admin',
         ]);
 
         return redirect()

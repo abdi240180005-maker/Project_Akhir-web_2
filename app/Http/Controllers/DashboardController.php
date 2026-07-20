@@ -10,11 +10,6 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Jika Admin, arahkan ke Dashboard Admin
-        if (Auth::user()->role === 'admin') {
-            return redirect()->route('admin.dashboard');
-        }
-
         $allCountries = Country::orderBy('name')->get();
 
         $selectedCountryCode = request()->input('selected_country', 'ID');

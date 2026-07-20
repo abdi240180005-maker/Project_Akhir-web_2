@@ -39,18 +39,44 @@ body{
 
 .btn{
     border-radius:10px;
+    font-weight: 500;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 15px rgba(6, 78, 59, 0.15);
+}
+
+.btn:active{
+    transform:translateY(1px);
 }
 
 .btn-primary{
-    border-radius:10px;
+    background:linear-gradient(135deg, var(--slate-blue) 0%, var(--midnight-blue) 100%) !important;
+    border:none !important;
+    color:#ffffff !important;
+}
+
+.btn-primary:hover{
+    background:linear-gradient(135deg, #0a654d 0%, #033c2e) !important;
+    box-shadow:0 8px 20px rgba(6, 78, 59, 0.25) !important;
 }
 
 /* ===========================
    FORM
 =========================== */
 
-.form-control{
+.form-control, .form-select {
     border-radius:10px;
+    border:1px solid rgba(0, 0, 0, 0.1);
+    transition:border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color:var(--metallic-gold) !important;
+    box-shadow:0 0 0 4px rgba(197, 160, 89, 0.15) !important;
+    outline:0;
 }
 
 /* ===========================
@@ -58,43 +84,28 @@ body{
 =========================== */
 
 .card{
-
-    border:none;
-
-    border-radius:15px;
-
+    border:1px solid rgba(197, 160, 89, 0.12) !important;
+    border-radius:16px;
     overflow:hidden;
-
-    background:#fff;
-
-    box-shadow:0 8px 25px rgba(0,0,0,.06);
-
-    transition:.3s;
-
+    background:#ffffff;
+    box-shadow:0 12px 30px -10px rgba(2, 44, 34, 0.05), 0 1px 3px rgba(2, 44, 34, 0.02);
+    transition:transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card:hover{
-
-    transform:translateY(-4px);
-
+    transform:translateY(-6px) scale(1.002);
+    box-shadow:0 24px 50px -15px rgba(197, 160, 89, 0.12), 0 0 15px rgba(197, 160, 89, 0.05);
+    border-color:rgba(197, 160, 89, 0.35) !important;
 }
 
 .card::before{
-
     content:"";
-
     position:absolute;
-
     left:0;
-
     top:0;
-
-    width:5px;
-
+    width:4px;
     height:100%;
-
-    background:#2563EB;
-
+    background:linear-gradient(to bottom, var(--metallic-gold), #8c6a2b);
 }
 
 .card-body{
@@ -177,7 +188,7 @@ body{
 
     border-radius:15px;
 
-    background:#2563EB;
+    background:var(--metallic-gold);
 
     display:flex;
 
@@ -219,15 +230,15 @@ body{
 
 .menu a:hover{
 
-    background:#1D4ED8;
+    background:rgba(197, 160, 89, 0.15);
 
 }
 
 .menu a.active{
 
-    background:#2563EB;
+    background:var(--slate-blue);
 
-    border-left:5px solid white;
+    border-left:5px solid var(--metallic-gold);
 
 }
 
@@ -315,7 +326,7 @@ body{
 
 .icon-box:hover{
 
-    background:#2563EB;
+    background:var(--slate-blue);
 
     color:#fff;
 
@@ -339,7 +350,7 @@ body{
 
     border-radius:50%;
 
-    background:#2563EB;
+    background:var(--slate-blue);
 
     color:white;
 
@@ -451,13 +462,17 @@ body{
     height:350px !important;
 
 }
-/* --- PALET WARNA THE CLASSIC LUXURY --- */
+/* --- PALET WARNA ROYAL EMERALD & GOLD (Opsi 3) --- */
 :root {
-    --midnight-blue: #0B0C10;
-    --slate-blue: #1F2833;
-    --metallic-gold: #C5A059;
-    --soft-white: #F5F5F7;
-    --muted-silver: #C5A05980; /* Emas dengan opasitas untuk teks sekunder */
+    --midnight-blue: #022C22; /* Hijau Emerald pekat/sangat gelap */
+    --slate-blue: #064E3B; /* Hijau Emerald utama */
+    --metallic-gold: #C5A059; /* Emas Klasik */
+    --soft-white: #F4F6F5; /* Putih lembut krim */
+    --muted-silver: rgba(197, 160, 89, 0.6); /* Emas dengan transparansi */
+    
+    /* Override Bootstrap 5 Primary Color globally to Emerald */
+    --bs-primary: #064E3B;
+    --bs-primary-rgb: 6, 78, 59;
 }
 
 /* Container Utama Navbar */

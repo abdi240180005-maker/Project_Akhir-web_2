@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ComparisonController;
@@ -118,11 +121,34 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::resource('admin/ports', PortController::class)
         ->names('admin.ports');
-    Route::post(
-    'admin/ports/import',
-    [PortController::class, 'import']
-)->name('admin.ports.import');
 
+    Route::post(
+        'admin/ports/import',
+        [PortController::class, 'import']
+    )->name('admin.ports.import');
+});
+
+/*
+|--------------------------------------------------------------------------
+| ROUTE SEMENTARA MEMBUAT ADMIN
+|--------------------------------------------------------------------------
+| Setelah berhasil membuat admin dan bisa login,
+| HAPUS route ini lalu git push lagi.
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/create-admin', function () {
+
+    User::updateOrCreate(
+        ['email' => 'admin@gmail.com'],
+        [
+            'name' => 'Administrator',
+            'password' => Hash::make('admin123'),
+            'role' => 'admin',
+        ]
+    );
+
+    return '✅ Admin berhasil dibuat!<br><br>Email: admin@gmail.com<br>Password: admin123';
 });
 
 require __DIR__.'/auth.php';

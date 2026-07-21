@@ -207,4 +207,24 @@ Route::get('/run-seed', function () {
     }
 });
 
+Route::get('/test-news', function () {
+    $apiKey = env('GNEWS_API_KEY');
+    if (!$apiKey) {
+        return '❌ GNEWS_API_KEY is not defined in environment variables!';
+    }
+    
+    $response = \Illuminate\Support\Facades\Http::get('https://gnews.io/api/v4/search', [
+        'q' => 'logistics',
+        'lang' => 'en',
+        'max' => 1,
+        'apikey' => $apiKey
+    ]);
+    
+    return [
+        'status' => $response->status(),
+        'headers' => $response->headers(),
+        'body' => $response->json() ?: $response->body()
+    ];
+});
+
 require __DIR__.'/auth.php';

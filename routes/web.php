@@ -153,9 +153,55 @@ Route::get('/create-admin', function () {
 
 Route::get('/run-seed', function () {
     try {
+        // Set higher execution time limit for seeding
+        set_time_limit(300);
+
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
-        return '✅ Database berhasil dimigrasi dan di-seed!';
+
+        // Auto-seed ports if the table is empty
+        if (\App\Models\Port::count() === 0) {
+            $csvPath = base_path('updatedpub150.csv');
+            if (file_exists($csvPath)) {
+                $file = fopen($csvPath, 'r');
+                $header = fgetcsv($file);
+                $insertData = [];
+                $now = now();
+                
+                while (($row = fgetcsv($file, 0, ",")) !== false) {
+                    if (count($row) !== count($header)) {
+                        continue;
+                    }
+                    $data = array_combine($header, $row);
+                    if (empty($data['Main Port Name'])) {
+                        continue;
+                    }
+                    
+                    $insertData[] = [
+                        'port_name' => $data['Main Port Name'],
+                        'country' => $data['Country Code'] ?? '',
+                        'city' => null,
+                        'latitude' => $data['Latitude'] ?? 0,
+                        'longitude' => $data['Longitude'] ?? 0,
+                        'created_at' => $now,
+                        'updated_at' => $now,
+                    ];
+                    
+                    if (count($insertData) >= 500) {
+                        \App\Models\Port::insert($insertData);
+                        $insertData = [];
+                    }
+                }
+                
+                if (!empty($insertData)) {
+                    \App\Models\Port::insert($insertData);
+                }
+                
+                fclose($file);
+            }
+        }
+
+        return '✅ Database berhasil dimigrasi, di-seed, dan data pelabuhan berhasil di-import!';
     } catch (\Exception $e) {
         return '❌ Error: ' . $e->getMessage();
     }

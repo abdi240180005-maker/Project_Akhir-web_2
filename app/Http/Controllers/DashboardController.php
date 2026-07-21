@@ -14,6 +14,21 @@ class DashboardController extends Controller
 
         $selectedCountryCode = request()->input('selected_country', 'ID');
         $selectedCountryObj = Country::where('iso2', $selectedCountryCode)->first() ?: Country::first();
+        
+        if (!$selectedCountryObj) {
+            $selectedCountryObj = new Country();
+            $selectedCountryObj->id = 1;
+            $selectedCountryObj->name = 'Indonesia';
+            $selectedCountryObj->iso2 = 'ID';
+            $selectedCountryObj->capital = 'Jakarta';
+            $selectedCountryObj->population = 273523615;
+            $selectedCountryObj->currency = 'IDR';
+            $selectedCountryObj->latitude = -6.2088;
+            $selectedCountryObj->longitude = 106.8456;
+            $selectedCountryObj->gdp = 1186000000000;
+            $selectedCountryObj->inflation_rate = 3.0;
+        }
+
         $selectedCountryCode = $selectedCountryObj->iso2;
 
         // 1. Rest Countries API

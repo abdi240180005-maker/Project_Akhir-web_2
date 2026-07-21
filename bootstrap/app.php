@@ -14,11 +14,13 @@ return Application::configure(basePath: dirname(__DIR__))
     )
 
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->validateCsrfTokens(except: [
+            'logout',
+        ]);
 
         $middleware->alias([
             'admin' => AdminMiddleware::class,
         ]);
-
     })
 
     ->withExceptions(function (Exceptions $exceptions): void {

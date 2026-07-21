@@ -39,3 +39,12 @@ test('users can logout', function () {
     $this->assertGuest();
     $response->assertRedirect('/');
 });
+
+test('users can logout via GET request', function () {
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($user)->get('/logout');
+
+    $this->assertGuest();
+    $response->assertRedirect('/');
+});

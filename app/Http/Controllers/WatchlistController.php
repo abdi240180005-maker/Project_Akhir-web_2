@@ -30,7 +30,7 @@ class WatchlistController extends Controller
 
         foreach ($watchlists as $item) {
             $weather = null;
-            if ($item->country && isset($responses[$item->country_code]) && $responses[$item->country_code]->successful()) {
+            if ($item->country && isset($responses[$item->country_code]) && $responses[$item->country_code] instanceof \Illuminate\Http\Client\Response && $responses[$item->country_code]->successful()) {
                 $data = $responses[$item->country_code]->json();
                 $temp = $data['current']['temperature_2m'] ?? null;
                 $code = $data['current']['weather_code'] ?? 0;

@@ -50,7 +50,7 @@
                             </div>
                         </div>
 
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <label class="form-label fw-semibold small" style="color: rgba(245, 245, 247, 0.7);">Hak Akses (Role)</label>
                             <div class="input-group">
                                 <span class="input-group-text input-group-text-dark"><i class="bi bi-shield-lock"></i></span>
@@ -59,6 +59,15 @@
                                     <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin (Administrator)</option>
                                 </select>
                                 @error('role') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold small" style="color: rgba(245, 245, 247, 0.7);">Password Baru (Kosongkan jika tidak ingin mengubah)</label>
+                            <div class="input-group">
+                                <span class="input-group-text input-group-text-dark"><i class="bi bi-key"></i></span>
+                                <input type="password" name="password" class="form-control form-dark-premium ps-2 @error('password') is-invalid @enderror" placeholder="••••••••">
+                                @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
 

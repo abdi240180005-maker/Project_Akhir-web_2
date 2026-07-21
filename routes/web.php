@@ -151,4 +151,14 @@ Route::get('/create-admin', function () {
     return '✅ Admin berhasil dibuat!<br><br>Email: admin@gmail.com<br>Password: admin123';
 });
 
+Route::get('/run-seed', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
+        return '✅ Database berhasil dimigrasi dan di-seed!';
+    } catch (\Exception $e) {
+        return '❌ Error: ' . $e->getMessage();
+    }
+});
+
 require __DIR__.'/auth.php';

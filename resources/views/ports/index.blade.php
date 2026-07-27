@@ -84,6 +84,79 @@
         </div>
     </div>
 
+    {{-- Kalkulator Estimasi Pengiriman Pelabuhan A ke Pelabuhan B --}}
+    <div class="card shadow-sm border-0 mb-4 bg-white rounded-4 overflow-hidden border-top border-primary border-4">
+        <div class="card-body p-4">
+            <h5 class="fw-bold text-dark mb-1 d-flex align-items-center gap-2">
+                <span>🚢</span> Kalkulator Estimasi Waktu Pengiriman (Port-to-Port Route Estimator)
+            </h5>
+            <p class="text-muted small mb-3">Hitung estimasi durasi pengiriman antar pelabuhan beserta alasan dan rincian faktor penundaan.</p>
+
+            <form method="GET" action="{{ route('ports.index') }}">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-5">
+                        <label class="form-label small fw-bold text-secondary mb-1">Pelabuhan Asal (Origin Port)</label>
+                        <select name="origin_port" class="form-select bg-light py-2 px-3 border-0" style="border-radius: 0.5rem;" required>
+                            <option value="">-- Pilih Pelabuhan Asal --</option>
+                            @foreach($allPorts as $p)
+                                <option value="{{ $p->id }}" {{ request('origin_port') == $p->id ? 'selected' : '' }}>
+                                    {{ $p->port_name }} ({{ $p->country }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-5">
+                        <label class="form-label small fw-bold text-secondary mb-1">Pelabuhan Tujuan (Destination Port)</label>
+                        <select name="destination_port" class="form-select bg-light py-2 px-3 border-0" style="border-radius: 0.5rem;" required>
+                            <option value="">-- Pilih Pelabuhan Tujuan --</option>
+                            @foreach($allPorts as $p)
+                                <option value="{{ $p->id }}" {{ request('destination_port') == $p->id ? 'selected' : '' }}>
+                                    {{ $p->port_name }} ({{ $p->country }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold" style="border-radius: 0.5rem;">
+                            <i class="bi bi-stopwatch me-1"></i> Cek Estimasi
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            @if(isset($estimateResult) && $estimateResult)
+            <div class="mt-4 p-4 rounded-4 bg-slate-50 border border-slate-200">
+                <div class="row align-items-center g-4">
+                    <div class="col-md-4 text-center border-end">
+                        <span class="text-muted d-block small fw-semibold text-uppercase tracking-wider">Estimasi Total Waktu Tiba (ETA)</span>
+                        <h1 class="display-4 fw-black text-primary mb-0 font-monospace">{{ $estimateResult['total_days'] }}</h1>
+                        <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-1 rounded-pill fw-bold">~ {{ $estimateResult['total_hours'] }} Jam (Hari)</span>
+                    </div>
+                    <div class="col-md-8">
+                        <h6 class="fw-bold text-dark mb-2">📋 Rincian & Alasan Estimasi Waktu Pengiriman:</h6>
+                        <ul class="list-group list-group-flush bg-transparent small">
+                            <li class="list-group-item bg-transparent border-0 px-0 py-1 text-slate-700">
+                                <strong>1. Jarak Tempuh Laut:</strong> {{ $estimateResult['reasons']['Distance'] }}
+                            </li>
+                            <li class="list-group-item bg-transparent border-0 px-0 py-1 text-slate-700">
+                                <strong>2. Waktu Jelajah Kapal:</strong> {{ $estimateResult['reasons']['Sailing'] }}
+                            </li>
+                            <li class="list-group-item bg-transparent border-0 px-0 py-1 text-slate-700">
+                                <strong>3. Hambatan & Kemacetan Pelabuhan:</strong> {{ $estimateResult['reasons']['PortCongestion'] }}
+                            </li>
+                            <li class="list-group-item bg-transparent border-0 px-0 py-1 text-slate-700">
+                                <strong>4. Mitigasi Cuaca & Gelombang Laut:</strong> {{ $estimateResult['reasons']['WeatherSea'] }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            @endif
+        </div>
+    </div>
+
     {{-- Form Pencarian & Filter Negara --}}
     <div class="card shadow-sm border-0 mb-4 bg-white rounded-4">
         <div class="card-body p-3.5">

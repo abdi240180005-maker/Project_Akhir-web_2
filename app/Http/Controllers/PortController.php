@@ -94,6 +94,68 @@ class PortController extends Controller
             ->orderBy('country')
             ->pluck('country');
 
+        // Estimasi Pengiriman Pelabuhan (Route Estimator)
+        $estimateResult = null;
+        if ($request->filled('origin_port') && $request->filled('destination_port')) {
+            $origin = Port::find($request->origin_port);
+            $destination = Port::find($request->destination_port);
+
+            if ($origin && $destination) {
+                // Hitung jarak Haversine (Nautical Miles)
+                $lat1 = deg2rad($origin->latitude);
+                $lon1 = deg2rad($origin->longitude);
+                $lat2 = deg2rad($destination->latitude);
+                $lon2 = deg2rad($destination->longitude);
+
+                $dlat = $lat2 - $lat1;
+                $dlon = $lon2 - $lon1;
+
+                $a = sin($dlat / 2) * sin($dlat / 2) + cos($lat1) * cos($lat2) * sin($dlon / 2) * sin($dlon / 2);
+                $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+                
+                // Jarak dalam Kilometer & Nautical Miles (1 NM = 1.852 km, R bumi = 6371 km)
+                $distanceKm = 6371 * $c;
+                $distanceNM = $distanceKm / 1.852;
+
+                // Kecepatan rata-rata Kapal Kargo Logistik: 20 Knot (Nautical Miles / Jam)
+                $averageSpeedKts = 20;
+                $baseSailingHours = $distanceNM > 0 ? ($distanceNM / $averageSpeedKts) : 1;
+
+                // Delay Pelabuhan Asal & Tujuan
+                $originDelay = abs(crc32($origin->port_name) % 36);
+                $destDelay = abs(crc32($destination->port_name) % 36);
+                $totalPortDelayHours = $originDelay + $destDelay;
+
+                // Faktor Risiko Cuaca / Wilayah (Randomized Buffer 10 - 25% sesuai kondisi lautan)
+                $weatherBufferPercent = (abs(crc32($origin->port_name . $destination->port_name) % 15) + 10);
+                $weatherDelayHours = ($baseSailingHours * ($weatherBufferPercent / 100));
+
+                $totalHours = $baseSailingHours + $totalPortDelayHours + $weatherDelayHours;
+                $estimatedDays = round($totalHours / 24, 1);
+
+                // Rincian Alasan / Penyebab Estimasi
+                $reasons = [
+                    "Distance" => "Jarak tempuh laut antara " . $origin->port_name . " dan " . $destination->port_name . " adalah sekitar " . number_format($distanceNM, 0) . " Nautical Miles (" . number_format($distanceKm, 0) . " km).",
+                    "Sailing" => "Waktu jelajah murni kapal kargo (kecepatan rata-rata 20 knots): " . round($baseSailingHours / 24, 1) . " hari (" . round($baseSailingHours) . " jam).",
+                    "PortCongestion" => "Antrean & kemacetan di Pelabuhan Asal (" . $originDelay . " jam) dan Pelabuhan Tujuan (" . $destDelay . " jam) menambah total " . $totalPortDelayHours . " jam penundaan.",
+                    "WeatherSea" => "Faktor mitigasi gelombang laut & badai menambahkan buffer penyesuaian +" . $weatherBufferPercent . "% (" . round($weatherDelayHours) . " jam)."
+                ];
+
+                $estimateResult = [
+                    'origin' => $origin,
+                    'destination' => $destination,
+                    'distance_nm' => round($distanceNM),
+                    'distance_km' => round($distanceKm),
+                    'sailing_days' => round($baseSailingHours / 24, 1),
+                    'total_days' => $estimatedDays,
+                    'total_hours' => round($totalHours),
+                    'port_delay' => $totalPortDelayHours,
+                    'weather_buffer' => round($weatherDelayHours),
+                    'reasons' => $reasons,
+                ];
+            }
+        }
+
         return view(
             'ports.index',
             compact(
@@ -103,7 +165,8 @@ class PortController extends Controller
                 'totalPorts',
                 'lowCount',
                 'mediumCount',
-                'highCount'
+                'highCount',
+                'estimateResult'
             )
         );
     }

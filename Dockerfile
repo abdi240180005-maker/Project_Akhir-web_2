@@ -6,11 +6,12 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
+    libsqlite3-dev \
     zip \
     unzip \
     git \
     curl \
-    && docker-php-ext-install pdo_mysql mbstring gd
+    && docker-php-ext-install pdo_mysql pdo_sqlite mbstring gd
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
@@ -30,8 +31,9 @@ COPY . .
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Ensure sqlite database exists and set permissions
+RUN touch /var/www/html/database/database.sqlite
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
 
 EXPOSE 80
 

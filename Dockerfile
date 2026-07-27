@@ -35,6 +35,7 @@ RUN composer install --no-dev --optimize-autoloader
 RUN touch /var/www/html/database/database.sqlite
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
 
+# Expose port
 EXPOSE 80
 
-CMD ["sh", "-c", "php artisan migrate --force && php artisan db:seed --force && apache2-foreground"]
+CMD ["sh", "-c", "php artisan migrate --force && php artisan db:seed --force && php artisan serve --host=0.0.0.0 --port=80"]

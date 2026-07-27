@@ -99,6 +99,22 @@
 
     </div>
 
+    {{-- AI Insights Recommendation Card --}}
+    @if(isset($aiSummary) && $aiSummary)
+    <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden" style="background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%); border-left: 5px solid #3b82f6 !important;">
+        <div class="card-body p-4">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="fs-4">🤖</span>
+                <h6 class="fw-bold text-dark mb-0">AI Executive Recommendation Engine</h6>
+                <span class="badge bg-primary rounded-pill px-2.5 py-1" style="font-size: 0.7rem;">Automated Decision Support</span>
+            </div>
+            <p class="text-secondary mb-0 lead fs-6">
+                {!! $aiSummary !!}
+            </p>
+        </div>
+    </div>
+    @endif
+
     {{-- Hero Cards Profil Negara --}}
     <div class="row g-4 mb-4">
         {{-- Negara 1 --}}

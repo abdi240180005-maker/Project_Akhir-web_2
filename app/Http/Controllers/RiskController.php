@@ -149,6 +149,11 @@ class RiskController extends Controller
         $newsRisk = 20; // default medium
         $sentimentResult = 'Neutral';
         $sentimentText = '';
+        $sentimentDetails = [
+            'positive' => 0,
+            'neutral'  => 100,
+            'negative' => 0,
+        ];
 
         try {
 
@@ -168,12 +173,33 @@ class RiskController extends Controller
 
                 $articles = $response->json()['articles'] ?? [];
                 
+                $posCount = 0;
+                $neuCount = 0;
+                $negCount = 0;
+                $sentimentController = new SentimentController();
+
                 foreach ($articles as $article) {
-                    $sentimentText .= ' ' . ($article['title'] ?? '') . ' ' . ($article['description'] ?? '');
+                    $text = ($article['title'] ?? '') . ' ' . ($article['description'] ?? '');
+                    $analysis = $sentimentController->analyze($text);
+                    $sentiment = $analysis['sentiment'] ?? 'Neutral';
+                    
+                    if ($sentiment === 'Positive') $posCount++;
+                    elseif ($sentiment === 'Negative') $negCount++;
+                    else $neuCount++;
+
+                    $sentimentText .= ' ' . $text;
+                }
+
+                $totalArt = count($articles);
+                if ($totalArt > 0) {
+                    $sentimentDetails = [
+                        'positive' => round(($posCount / $totalArt) * 100),
+                        'neutral'  => round(($neuCount / $totalArt) * 100),
+                        'negative' => round(($negCount / $totalArt) * 100),
+                    ];
                 }
 
                 if (!empty(trim($sentimentText))) {
-                    $sentimentController = new SentimentController();
                     $sentimentAnalysis = $sentimentController->analyze($sentimentText);
                     $sentimentResult = $sentimentAnalysis['sentiment'] ?? 'Neutral';
 
@@ -234,6 +260,7 @@ class RiskController extends Controller
                 'status',
                 'color',
                 'sentimentResult',
+                'sentimentDetails',
                 'databaseArticles'
             )
         );

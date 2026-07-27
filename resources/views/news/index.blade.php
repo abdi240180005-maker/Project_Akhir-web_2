@@ -15,6 +15,41 @@
         </p>
     </div>
 
+    {{-- Ringkasan Sentimen Berita --}}
+    @if(isset($sentimentSummary))
+    <div class="card border-0 shadow-sm rounded-4 mb-4 bg-light overflow-hidden">
+        <div class="card-body p-4">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div>
+                    <h6 class="fw-bold mb-1 text-dark">🤖 Lexicon Sentiment Analysis</h6>
+                    <small class="text-muted">Hasil analisis sentimen berita berbasis kamus kata (PHP Data Science)</small>
+                </div>
+                <span class="badge bg-primary rounded-pill px-3 py-2">Auto Calculated</span>
+            </div>
+            <div class="row text-center g-3">
+                <div class="col-md-4">
+                    <div class="p-3 bg-white rounded-3 shadow-sm border-top border-success border-4">
+                        <span class="text-muted d-block small mb-1 fw-semibold">🟢 Positive</span>
+                        <h3 class="fw-bold text-success mb-0">{{ $sentimentSummary['positive'] }}%</h3>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-white rounded-3 shadow-sm border-top border-secondary border-4">
+                        <span class="text-muted d-block small mb-1 fw-semibold">⚪ Neutral</span>
+                        <h3 class="fw-bold text-secondary mb-0">{{ $sentimentSummary['neutral'] }}%</h3>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-white rounded-3 shadow-sm border-top border-danger border-4">
+                        <span class="text-muted d-block small mb-1 fw-semibold">🔴 Negative</span>
+                        <h3 class="fw-bold text-danger mb-0">{{ $sentimentSummary['negative'] }}%</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
     {{-- Filter --}}
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">

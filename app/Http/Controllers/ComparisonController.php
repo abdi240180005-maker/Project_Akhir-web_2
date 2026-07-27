@@ -23,6 +23,8 @@ class ComparisonController extends Controller
         $data1 = $this->getCountryData($country1);
         $data2 = $this->getCountryData($country2);
 
+        $aiSummary = $this->generateAiComparisonSummary($country1, $country2, $data1, $data2);
+
         return view(
             'comparison.index',
             compact(
@@ -30,7 +32,8 @@ class ComparisonController extends Controller
                 'country1',
                 'country2',
                 'data1',
-                'data2'
+                'data2',
+                'aiSummary'
             )
         );
     }
@@ -188,5 +191,53 @@ class ComparisonController extends Controller
             'risk_level' => $riskLevel,
 
         ];
+    }
+
+    private function generateAiComparisonSummary($country1, $country2, $data1, $data2)
+    {
+        if (!$country1 || !$country2 || !$data1 || !$data2) {
+            return null;
+        }
+
+        $gdp1 = $data1['gdp'] ?? 0;
+        $gdp2 = $data2['gdp'] ?? 0;
+        $score1 = $data1['risk_score'] ?? 50;
+        $score2 = $data2['risk_score'] ?? 50;
+        $inf1 = $data1['inflation'] ?? 0;
+        $inf2 = $data2['inflation'] ?? 0;
+
+        $recommended = null;
+        $reason = [];
+
+        if ($score1 < $score2) {
+            $recommended = $country1->name;
+            $reason[] = "memiliki skor risiko rantai pasok yang lebih rendah ({$score1} vs {$score2})";
+        } elseif ($score2 < $score1) {
+            $recommended = $country2->name;
+            $reason[] = "memiliki skor risiko rantai pasok yang lebih rendah ({$score2} vs {$score1})";
+        }
+
+        if ($gdp1 > $gdp2) {
+            $reason[] = "ukuran ekonomi (GDP) {$country1->name} lebih dominan";
+        } elseif ($gdp2 > $gdp1) {
+            $reason[] = "ukuran ekonomi (GDP) {$country2->name} lebih dominan";
+        }
+
+        if ($inf1 !== null && $inf2 !== null) {
+            if ($inf1 < $inf2) {
+                $reason[] = "stabilitas inflasi {$country1->name} (" . number_format($inf1, 1) . "%) lebih terkendali dibanding {$country2->name} (" . number_format($inf2, 1) . "%)";
+            } elseif ($inf2 < $inf1) {
+                $reason[] = "stabilitas inflasi {$country2->name} (" . number_format($inf2, 1) . "%) lebih terkendali dibanding {$country1->name} (" . number_format($inf1, 1) . "%)";
+            }
+        }
+
+        $summaryText = "Berdasarkan analisis komparatif intelijen rantai pasok, ";
+        if ($recommended) {
+            $summaryText .= "<strong>{$recommended}</strong> direkomendasikan sebagai mitra perdagangan / jalur logistik yang lebih optimal karena " . implode(', serta ', $reason) . ".";
+        } else {
+            $summaryText .= "kedua negara memiliki profil risiko yang relatif seimbang dengan pertimbangan kondisi makro ekonomi masing-masing.";
+        }
+
+        return $summaryText;
     }
 }

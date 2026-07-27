@@ -143,6 +143,13 @@
                         <small class="text-slate-500 d-block mt-1">
                             Sentimen: <span class="badge {{ $sentimentBadge }} bg-opacity-10 text-{{ str_replace('bg-', '', $sentimentBadge) }} font-monospace px-1.5 py-0.5" style="font-size: 0.72rem;">{{ $sentimentResult }}</span>
                         </small>
+                        @if(isset($sentimentDetails))
+                        <div class="mt-2 pt-2 border-top border-slate-100" style="font-size: 0.7rem;">
+                            <span class="text-success fw-bold me-1">Pos: {{ $sentimentDetails['positive'] }}%</span>
+                            <span class="text-secondary fw-bold me-1">Net: {{ $sentimentDetails['neutral'] }}%</span>
+                            <span class="text-danger fw-bold">Neg: {{ $sentimentDetails['negative'] }}%</span>
+                        </div>
+                        @endif
                     </div>
                     <div class="icon-box bg-primary bg-opacity-10 text-primary">
                         📰

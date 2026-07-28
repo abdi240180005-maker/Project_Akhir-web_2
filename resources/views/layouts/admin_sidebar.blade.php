@@ -1,4 +1,4 @@
-<div class="sidebar d-flex flex-column justify-content-between" style="height: 100vh; overflow-y: auto; background-color: var(--midnight-blue); border-right: 1px solid rgba(197, 160, 89, 0.15);">
+<div class="sidebar d-flex flex-column justify-content-between" style="position: fixed; top: 0; left: 0; width: 270px; height: 100vh; overflow-y: auto; background-color: var(--midnight-blue); border-right: 1px solid rgba(197, 160, 89, 0.15); z-index: 1000;">
 
     <div>
         <div class="logo d-flex align-items-center gap-3 p-3 border-bottom border-secondary border-opacity-10" style="background-color: var(--slate-blue);">

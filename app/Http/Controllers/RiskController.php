@@ -247,6 +247,18 @@ class RiskController extends Controller
             $query->where('country', 'like', '%' . $country->name . '%');
         })->latest()->get();
 
+        $aiRiskService = new \App\Services\AiRiskService();
+        $aiSummary = $aiRiskService->generateExecutiveSummary(
+            $country,
+            $totalRisk,
+            $status,
+            $weatherRisk,
+            $inflationRisk,
+            $currencyRisk,
+            $newsRisk,
+            $sentimentResult
+        );
+
         return view(
             'risk.index',
             compact(
@@ -261,7 +273,8 @@ class RiskController extends Controller
                 'color',
                 'sentimentResult',
                 'sentimentDetails',
-                'databaseArticles'
+                'databaseArticles',
+                'aiSummary'
             )
         );
     }

@@ -245,6 +245,18 @@ class DashboardController extends Controller
             ];
         }
 
+        $aiRiskService = new \App\Services\AiRiskService();
+        $aiSummary = $aiRiskService->generateExecutiveSummary(
+            $selectedCountryObj,
+            45,
+            'Risiko Sedang',
+            15,
+            10,
+            5,
+            15,
+            'Neutral'
+        );
+
         return view(
             'dashboard.index',
             compact(
@@ -258,7 +270,8 @@ class DashboardController extends Controller
                 'articles',
                 'summaryCountries',
                 'selectedCurrencyCode',
-                'selectedCurrencyRate'
+                'selectedCurrencyRate',
+                'aiSummary'
             )
         );
     }

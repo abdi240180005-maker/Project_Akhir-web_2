@@ -238,6 +238,88 @@
         </div>
     </div>
 
+    <!-- AI Executive Risk Intelligence Summary Section -->
+    @if(isset($aiSummary))
+    <div class="row g-4 mt-2">
+        <div class="col-12">
+            <div class="card card-custom shadow-sm border-0 overflow-hidden">
+                <div class="card-header p-4 text-white d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between gap-2" style="background: linear-gradient(135deg, #0B0C10 0%, #1F2833 100%); border-bottom: 2px solid #C5A059;">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 44px; height: 44px; background: linear-gradient(135deg, #D4AF37 0%, #C5A059 100%); font-size: 1.25rem;">
+                            ✨
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-0 text-white" style="font-size: 1.05rem;">
+                                Rangkuman Eksekutif & Prediksi AI Risk Intelligence
+                            </h5>
+                            <small class="text-white-50" style="font-size: 0.78rem;">
+                                Analisis otomatis risiko rantai pasok berdasarkan sintesis data cuaca, indikator makroekonomi, dan berita global.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge bg-dark text-warning border border-warning border-opacity-25 px-3 py-1.5 rounded-pill font-monospace" style="font-size: 0.75rem;">
+                            <i class="bi bi-cpu-fill me-1"></i> {{ $aiSummary['generated_by'] ?? 'RiskIntel AI Engine' }}
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body p-4 bg-white">
+                    <!-- Headline AI -->
+                    <div class="p-3 mb-4 rounded-3 border border-warning border-opacity-25" style="background-color: rgba(197, 160, 89, 0.05);">
+                        <h6 class="fw-bold text-dark mb-2 d-flex align-items-center gap-2" style="font-size: 0.95rem;">
+                            <i class="bi bi-lightbulb-fill text-warning"></i> {{ $aiSummary['headline'] ?? '' }}
+                        </h6>
+                        <p class="text-secondary small mb-0 lh-base">
+                            {!! nl2br(e($aiSummary['summary'] ?? '')) !!}
+                        </p>
+                    </div>
+
+                    <div class="row g-4">
+                        <!-- Key Drivers -->
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3 bg-light border border-slate-100 h-100">
+                                <h6 class="fw-bold text-slate-800 mb-3 d-flex align-items-center gap-2" style="font-size: 0.88rem;">
+                                    <i class="bi bi-lightning-charge-fill text-danger"></i> Faktor Pemicu Utama (Key Risk Drivers)
+                                </h6>
+                                <ul class="list-unstyled mb-0 d-flex flex-column gap-2">
+                                    @foreach($aiSummary['key_drivers'] ?? [] as $driver)
+                                        <li class="d-flex align-items-start gap-2 text-secondary small">
+                                            <i class="bi bi-exclamation-circle text-warning mt-0.5"></i>
+                                            <span>{{ $driver }}</span>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Mitigation Actions -->
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3 bg-light border border-slate-100 h-100">
+                                <h6 class="fw-bold text-slate-800 mb-3 d-flex align-items-center gap-2" style="font-size: 0.88rem;">
+                                    <i class="bi bi-shield-check text-success"></i> Rekomendasi Tindakan Mitigasi Rantai Pasok
+                                </h6>
+                                <ul class="list-unstyled mb-0 d-flex flex-column gap-2">
+                                    @foreach($aiSummary['mitigation_actions'] ?? [] as $action)
+                                        <li class="d-flex align-items-start gap-2 text-secondary small">
+                                            <i class="bi bi-check-circle-fill text-success mt-0.5"></i>
+                                            <span>{{ $action }}</span>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 pt-3 border-top border-slate-100 d-flex justify-content-between align-items-center text-muted small" style="font-size: 0.75rem;">
+                        <span><i class="bi bi-shield-lock me-1"></i>Tingkat Akurasi Evaluasi: <strong class="text-dark">{{ $aiSummary['confidence'] ?? 'High' }}</strong></span>
+                        <span class="text-secondary"><i class="bi bi-clock-history me-1"></i>Diperbarui secara real-time berdasarkan query terakhir</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
     <!-- Artikel Analisis Resmi Section -->
     <div class="row g-4 mt-2">
         <div class="col-12">

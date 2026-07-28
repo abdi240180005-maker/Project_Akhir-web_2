@@ -106,6 +106,65 @@ if (!function_exists('format_gdp_id')) {
         </div>
     </div>
 
+    <!-- AI Executive Risk Summary Highlight Card -->
+    @if(isset($aiSummary))
+    <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4 bg-white">
+        <div class="card-header p-4 text-white d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between gap-2" style="background: linear-gradient(135deg, #0B0C10 0%, #1F2833 100%); border-bottom: 2px solid #C5A059;">
+            <div class="d-flex align-items-center gap-3">
+                <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 44px; height: 44px; background: linear-gradient(135deg, #D4AF37 0%, #C5A059 100%); font-size: 1.25rem;">
+                    ✨
+                </div>
+                <div>
+                    <h5 class="fw-bold mb-0 text-white" style="font-size: 1.05rem;">
+                        Rangkuman Eksekutif AI & Analisis Risiko: {{ $selectedCountryObj->name ?? 'Global' }}
+                    </h5>
+                    <small class="text-white-50" style="font-size: 0.78rem;">
+                        Sintesis otomatis risiko rantai pasok berbasis AI
+                    </small>
+                </div>
+            </div>
+            <div>
+                <a href="{{ route('risk.index', ['country' => $selectedCountryObj->id]) }}" class="btn btn-sm btn-outline-warning text-warning rounded-pill px-3 py-1fw-semibold">
+                    <i class="bi bi-shield-exclamation me-1"></i> Buka Detail Analisis Risiko
+                </a>
+            </div>
+        </div>
+        <div class="card-body p-4">
+            <div class="p-3 mb-3 rounded-3 border border-warning border-opacity-25" style="background-color: rgba(197, 160, 89, 0.05);">
+                <h6 class="fw-bold text-dark mb-2 d-flex align-items-center gap-2">
+                    <i class="bi bi-lightbulb-fill text-warning"></i> {{ $aiSummary['headline'] ?? '' }}
+                </h6>
+                <p class="text-secondary small mb-0 lh-base">
+                    {!! nl2br(e($aiSummary['summary'] ?? '')) !!}
+                </p>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="p-3 rounded-3 bg-light border h-100">
+                        <h6 class="fw-bold text-dark mb-2 small"><i class="bi bi-lightning-charge-fill text-danger me-1"></i> Key Risk Drivers:</h6>
+                        <ul class="mb-0 ps-3 text-secondary small">
+                            @foreach($aiSummary['key_drivers'] ?? [] as $driver)
+                                <li>{{ $driver }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 rounded-3 bg-light border h-100">
+                        <h6 class="fw-bold text-dark mb-2 small"><i class="bi bi-shield-check text-success me-1"></i> Mitigasi Rantai Pasok:</h6>
+                        <ul class="mb-0 ps-3 text-secondary small">
+                            @foreach($aiSummary['mitigation_actions'] ?? [] as $action)
+                                <li>{{ $action }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
     {{-- Analisis & Integrasi Data Negara Global (Real-time) --}}
     <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4 bg-white">
         <div class="card-header bg-white border-bottom fw-bold py-3 text-dark d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2">

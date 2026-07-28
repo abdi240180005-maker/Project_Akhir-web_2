@@ -1,4 +1,5 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
+@import "bootstrap-icons/font/bootstrap-icons.css";
 
 /* ===========================
    GLOBAL
@@ -19,6 +20,7 @@ body{
 .main-content{
     flex:1;
     margin-left:270px;
+    min-width: 0;
 }
 
 .content-area{
@@ -165,6 +167,26 @@ body{
     justify-content:space-between;
 
     box-shadow:5px 0 20px rgba(0,0,0,.08);
+
+    z-index:1000;
+
+    scrollbar-width: thin;
+
+    scrollbar-color: rgba(197, 160, 89, 0.3) transparent;
+
+}
+
+.sidebar::-webkit-scrollbar {
+
+    width: 5px;
+
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+
+    background: rgba(197, 160, 89, 0.3);
+
+    border-radius: 4px;
 
 }
 
@@ -488,22 +510,29 @@ body{
 }
 
 /* Sisi Kiri (Dashboard Title & Subtitle) */
+.top-navbar .left {
+    flex-shrink: 0;
+}
+
 .top-navbar .left h4 {
     color: var(--soft-white);
     font-size: 1.25rem;
     letter-spacing: 0.5px;
+    margin-bottom: 2px !important;
 }
 
 .top-navbar .left .text-muted {
-    color: rgba(245, 245, 247, 0.5) !important; /* Overwrite bawaan bootstrap */
+    color: rgba(245, 245, 247, 0.7) !important; /* Overwrite bawaan bootstrap */
     font-size: 0.85rem;
+    display: block;
 }
 
 /* Sisi Kanan (Widgets & Profile) */
 .top-navbar .right {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1.25rem;
+    flex-shrink: 0;
 }
 
 /* Box Tanggal Digital */

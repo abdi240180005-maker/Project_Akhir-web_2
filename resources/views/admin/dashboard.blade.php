@@ -62,11 +62,11 @@
     }
 </style>
 
-<div class="container py-5"> 
-        <p class="text-muted mb-0">
-            Sistem Panel Kendali Utama <span class="fw-semibold text-primary">Global Supply Chain Risk Intelligence</span>.
-        </p>
-    </div>
+<div class="mb-4">
+    <p class="text-muted mb-0">
+        Sistem Panel Kendali Utama <span class="fw-semibold text-primary">Global Supply Chain Risk Intelligence</span>.
+    </p>
+</div>
 
     <!-- Stats Section (Top Cards) -->
     <div class="row g-4 mb-5">

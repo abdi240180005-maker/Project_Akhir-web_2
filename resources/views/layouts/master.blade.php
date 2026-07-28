@@ -42,6 +42,8 @@
 
         </div>
 
+        @include('layouts.footer')
+
     </div>
 
 </div>

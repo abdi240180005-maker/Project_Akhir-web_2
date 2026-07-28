@@ -1,7 +1,7 @@
 # Use official PHP Apache image
 FROM php:8.2-apache
 
-# Install dependencies and extensions
+# Install dependencies, Node.js and PHP extensions
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
@@ -11,6 +11,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
     && docker-php-ext-install pdo_mysql pdo_sqlite mbstring gd
 
 # Enable Apache mod_rewrite
@@ -27,11 +29,15 @@ WORKDIR /var/www/html
 # Copy application files
 COPY . .
 
-# Install Composer
+# Install Composer dependencies
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader
 
-# Ensure sqlite database exists and set permissions
+# Install NPM dependencies and build Vite production assets inside Docker
+RUN npm install
+RUN npm run build
+
+# Ensure database directory & permissions exist
 RUN touch /var/www/html/database/database.sqlite
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
 

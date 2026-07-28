@@ -227,8 +227,18 @@
             </button>
         </form>
 
+        <!-- Redirect to Register -->
+        <div class="text-center mt-4 pt-2">
+            <p class="small mb-0" style="color: rgba(244, 246, 245, 0.7);">
+                Belum punya akun?
+                <a href="{{ route('register') }}" class="fw-bold style-gold-link ms-1" style="color: var(--metallic-gold); text-decoration: none;">
+                    Daftar / Register
+                </a>
+            </p>
+        </div>
+
         <!-- Copyright Footer -->
-        <div class="mt-5 text-center">
+        <div class="mt-4 text-center">
             <p style="font-size: 0.72rem; color: rgba(244, 246, 245, 0.35); margin: 0;">
                 &copy; 2026 Global Supply Chain Corp. Seluruh Hak Cipta Dilindungi.
             </p>

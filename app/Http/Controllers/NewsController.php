@@ -41,12 +41,12 @@ class NewsController extends Controller
             foreach ($articles as &$article) {
                 $text = ($article['title'] ?? '') . ' ' . ($article['description'] ?? '');
                 $analysis = $sentimentController->analyze($text);
-                $sentiment = $analysis['sentiment'] ?? 'Neutral';
-                $article['sentiment'] = $sentiment;
+                $article['sentiment'] = $analysis['sentiment'] ?? 'Neutral';
+                $article['sentimentAnalysis'] = $analysis;
 
-                if ($sentiment === 'Positive') {
+                if ($article['sentiment'] === 'Positive') {
                     $posCount++;
-                } elseif ($sentiment === 'Negative') {
+                } elseif ($article['sentiment'] === 'Negative') {
                     $negCount++;
                 } else {
                     $neuCount++;

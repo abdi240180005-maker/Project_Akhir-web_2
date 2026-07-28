@@ -150,11 +150,26 @@
                                 }
                             @endphp
                             <span class="badge {{ $badgeClass }} bg-opacity-10 text-{{ str_replace('bg-', '', $badgeClass) }} border border-{{ str_replace('bg-', '', $badgeClass) }}-subtle rounded-pill px-2.5 py-1" style="font-size: 0.72rem;">
-                                Sentimen: {{ $sentimentLabel }}
+                                Sentimen Lexicon: {{ $sentimentLabel }}
                             </span>
                         @endif
 
                     </div>
+
+                    @if(isset($article['sentimentAnalysis']))
+                        <div class="mb-3 p-2 bg-light rounded-3 border border-slate-100" style="font-size: 0.76rem;">
+                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                <span class="fw-semibold text-dark"><i class="bi bi-journal-text me-1 text-primary"></i>Kamus Kata Match:</span>
+                                <span class="text-muted font-monospace" style="font-size: 0.7rem;">+{{ $article['sentimentAnalysis']['positive_count'] }} | -{{ $article['sentimentAnalysis']['negative_count'] }}</span>
+                            </div>
+                            @if(!empty($article['sentimentAnalysis']['positive_words']))
+                                <div class="text-success mb-0.5"><i class="bi bi-plus-circle me-1"></i>Positif: <strong>{{ implode(', ', $article['sentimentAnalysis']['positive_words']) }}</strong></div>
+                            @endif
+                            @if(!empty($article['sentimentAnalysis']['negative_words']))
+                                <div class="text-danger"><i class="bi bi-dash-circle me-1"></i>Negatif: <strong>{{ implode(', ', $article['sentimentAnalysis']['negative_words']) }}</strong></div>
+                            @endif
+                        </div>
+                    @endif
 
                     <h5 class="fw-bold">
 
